@@ -13,14 +13,18 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 380px; min-height: 600px; }
+html, body, #root {
+  width: 420px;
+  height: 600px;
+  margin: 0;
+  overflow: hidden;
+}
 button, input, textarea { font: inherit; }
 button { color: inherit; }
 .app-shell {
   width: 420px;
-  min-height: 640px;
-  height: 100vh;
-  max-height: 760px;
+  height: 600px;
+  min-height: 0;
   margin: 0 auto;
   background: var(--paper);
   display: grid;
@@ -35,7 +39,7 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .brand strong { font-size: 17px; letter-spacing: -.5px; }
 .header-note { color: var(--muted); font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
 .pulse { width: 7px; height: 7px; background: #4da67b; border-radius: 50%; box-shadow: 0 0 0 3px #dceee5; }
-.content { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c8cac5 transparent; }
+.content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #c8cac5 transparent; }
 .capture-form, .library, .settings { padding: 25px 20px 30px; }
 .form-heading, .library-title { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
 .eyebrow { text-transform: uppercase; letter-spacing: 1.5px; color: var(--green); font-size: 9px; font-weight: 600; }
