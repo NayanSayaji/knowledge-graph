@@ -6,6 +6,28 @@ interface ChipInputProps {
   onChange: (values: string[]) => void;
   placeholder?: string;
   ariaLabel: string;
+  maxValueLength?: number;
+  visibleLimit?: number;
+}
+
+export function mergeChipValues(
+  values: string[],
+  raw: string,
+  maxValueLength = 25,
+) {
+  const additions = raw
+    .split(",")
+    .map((value) => value.trim().slice(0, maxValueLength))
+    .filter(Boolean);
+
+  return [
+    ...new Map(
+      [...values, ...additions].map((value) => [
+        value.toLocaleLowerCase(),
+        value,
+      ]),
+    ).values(),
+  ];
 }
 
 export function ChipInput({
@@ -13,23 +35,18 @@ export function ChipInput({
   onChange,
   placeholder,
   ariaLabel,
+  maxValueLength = 25,
+  visibleLimit = 2,
 }: ChipInputProps) {
   const [input, setInput] = useState("");
+  const visibleValues = values.slice(0, visibleLimit);
+  const hiddenValues = values.slice(visibleLimit);
 
   function commit(raw: string) {
-    const additions = raw
-      .split(",")
-      .map((value) => value.trim())
-      .filter(Boolean);
-    if (!additions.length) return;
+    const nextValues = mergeChipValues(values, raw, maxValueLength);
+    if (nextValues.length === values.length && !raw.trim()) return;
 
-    const merged = new Map(
-      [...values, ...additions].map((value) => [
-        value.toLocaleLowerCase(),
-        value,
-      ]),
-    );
-    onChange([...merged.values()]);
+    onChange(nextValues);
     setInput("");
   }
 
@@ -38,12 +55,15 @@ export function ChipInput({
   }
 
   return (
-    <div className="chip-input" onClick={(event) => {
-      event.currentTarget.querySelector("input")?.focus();
-    }}>
-      {values.map((value) => (
+    <div
+      className="chip-input"
+      onClick={(event) => {
+        event.currentTarget.querySelector("input")?.focus();
+      }}
+    >
+      {visibleValues.map((value) => (
         <span className="chip" key={value}>
-          {value}
+          <span className="chip-label">{value}</span>
           <button
             type="button"
             onClick={(event) => {
@@ -56,13 +76,22 @@ export function ChipInput({
           </button>
         </span>
       ))}
+      {hiddenValues.length > 0 && (
+        <span
+          className="chip-overflow"
+          title={hiddenValues.join(", ")}
+          aria-label={`${hiddenValues.length} more: ${hiddenValues.join(", ")}`}
+        >
+          +{hiddenValues.length} more
+        </span>
+      )}
       <input
         aria-label={ariaLabel}
         value={input}
         onChange={(event) => {
           const next = event.target.value;
           if (next.includes(",")) commit(next);
-          else setInput(next);
+          else setInput(next.slice(0, maxValueLength));
         }}
         onKeyDown={(event) => {
           if (event.key === "Enter") {

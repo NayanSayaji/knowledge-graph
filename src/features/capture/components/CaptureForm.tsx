@@ -6,7 +6,6 @@ import type {
 } from "@/domain/knowledge-node/model";
 import { EMPTY_NODE_DRAFT } from "@/domain/knowledge-node/model";
 import { saveNode } from "@/infrastructure/storage/node-repository";
-import { splitCommaSeparated } from "@/shared/lib/collections";
 import { getDomain } from "@/shared/lib/url";
 import { ChipInput } from "@/shared/ui/ChipInput";
 import { Arrow, External, Spark, X } from "@/shared/ui/icons";
@@ -163,12 +162,11 @@ export function CaptureForm({
       </div>
       <label>
         <span>Keywords</span>
-        <input
-          value={draft.keywords.join(", ")}
-          onChange={(event) =>
-            update("keywords", splitCommaSeparated(event.target.value))
-          }
+        <ChipInput
+          values={draft.keywords}
+          onChange={(values) => update("keywords", values)}
           placeholder="consistency, availability, partitions"
+          ariaLabel="Add keywords"
         />
       </label>
       <label>
