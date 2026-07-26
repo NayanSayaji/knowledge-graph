@@ -41,4 +41,56 @@ describe("knowledge storage", () => {
     expect(await database.nodes.count()).toBe(1);
     expect(await database.syncJobs.count()).toBe(1);
   });
+
+  it("merges sections and tags when the title already exists", async () => {
+    await saveNode({ ...draft, sections: ["HLD"], tags: ["interview"] });
+    const updated = await saveNode({
+      ...draft,
+      summary: "",
+      sections: ["Backend"],
+      tags: ["distributed"],
+    });
+
+    expect(await database.nodes.count()).toBe(1);
+    expect(updated.sections).toEqual(["HLD", "Backend"]);
+    expect(updated.tags).toEqual(["interview", "distributed"]);
+    expect(updated.summary).toBe(draft.summary);
+  });
+
+  it("upserts by normalized URL and preserves blank fields", async () => {
+    const first = await saveNode({
+      ...draft,
+      title: "Original title",
+      notes: "Keep these notes",
+      resources: [
+        {
+          url: "https://example.com/article/?utm_source=newsletter",
+          title: "Original title",
+          type: "article",
+          website: "example.com",
+        },
+      ],
+    });
+    const updated = await saveNode({
+      ...draft,
+      title: "Updated title",
+      summary: "",
+      notes: "",
+      sections: ["Distributed Systems"],
+      resources: [
+        {
+          url: "https://example.com/article",
+          title: "Updated title",
+          type: "article",
+          website: "example.com",
+        },
+      ],
+    });
+
+    expect(await database.nodes.count()).toBe(1);
+    expect(updated.id).toBe(first.id);
+    expect(updated.title).toBe("Updated title");
+    expect(updated.notes).toBe("Keep these notes");
+    expect(updated.sections).toEqual(["HLD", "Distributed Systems"]);
+  });
 });

@@ -18,7 +18,10 @@ export function NodeCard({ node, onEdit }: NodeCardProps) {
   const source = node.resources[0];
 
   return (
-    <article className="node-card" onClick={() => onEdit(node)}>
+    <article
+      className={`node-card${menu ? " menu-open" : ""}`}
+      onClick={() => onEdit(node)}
+    >
       <div className="node-top">
         <div className="node-symbol">
           <Network />
@@ -43,6 +46,14 @@ export function NodeCard({ node, onEdit }: NodeCardProps) {
         </button>
         {menu && (
           <div className="card-menu" onClick={(event) => event.stopPropagation()}>
+            <button
+              onClick={() => {
+                setMenu(false);
+                onEdit(node);
+              }}
+            >
+              Edit
+            </button>
             <button onClick={() => setFavorite(node.id, !node.favorite)}>
               {node.favorite ? "Remove favorite" : "Add favorite"}
             </button>

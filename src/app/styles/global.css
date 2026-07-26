@@ -56,6 +56,14 @@ input, textarea { width: 100%; border: 1px solid #dcdcd5; border-radius: 9px; pa
 textarea { resize: vertical; line-height: 1.5; }
 input:focus, textarea:focus { border-color: #77a28d; box-shadow: 0 0 0 3px #dcebe4; }
 input::placeholder, textarea::placeholder { color: #a7aca9; }
+.chip-input { min-height: 38px; display: flex; align-items: center; flex-wrap: wrap; gap: 5px; border: 1px solid #dcdcd5; border-radius: 9px; padding: 5px 7px; background: #fff; cursor: text; transition: border-color .15s, box-shadow .15s; }
+.chip-input:focus-within { border-color: #77a28d; box-shadow: 0 0 0 3px #dcebe4; }
+.chip-input input { flex: 1 1 75px; min-width: 65px; width: auto; border: 0; border-radius: 0; padding: 3px 2px; box-shadow: none; background: transparent; }
+.chip-input input:focus { border: 0; box-shadow: none; }
+.chip { display: inline-flex; align-items: center; gap: 3px; max-width: 100%; border-radius: 6px; padding: 4px 5px 4px 7px; background: var(--green-soft); color: var(--green); font-size: 9px; font-weight: 600; line-height: 1; }
+.chip button { width: 14px; height: 14px; display: grid; place-items: center; border: 0; border-radius: 50%; padding: 0; background: transparent; color: currentColor; cursor: pointer; }
+.chip button:hover { background: #c9dfd3; }
+.chip svg { width: 9px; height: 9px; }
 .notes { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .error { color: #b84d44; display: block; margin: 4px 2px 0; font-size: 10px; }
@@ -92,15 +100,16 @@ nav b { position: absolute; top: 9px; margin-left: 25px; min-width: 15px; height
 .filters button.active { color: var(--green); border-color: #b9d0c4; background: var(--green-soft); font-weight: 600; }
 .result-note { color: #979d99; font-size: 9px; margin: 1px 1px 8px; }
 .node-list { display: grid; gap: 8px; }
-.node-card { position: relative; border: 1px solid #e1e1da; border-radius: 11px; background: #fff; padding: 12px; cursor: pointer; transition: border-color .15s, transform .15s, box-shadow .15s; }
-.node-card:hover { transform: translateY(-1px); border-color: #c8d7cf; box-shadow: 0 5px 14px #33433b12; }
+.node-card { position: relative; z-index: 0; border: 1px solid #e1e1da; border-radius: 11px; background: #fff; padding: 12px; cursor: pointer; transition: border-color .15s, transform .15s, box-shadow .15s; }
+.node-card:hover { z-index: 1; transform: translateY(-1px); border-color: #c8d7cf; box-shadow: 0 5px 14px #33433b12; }
+.node-card.menu-open, .node-card.menu-open:hover { z-index: 20; }
 .node-top { display: grid; grid-template-columns: 32px minmax(0, 1fr) 25px; gap: 10px; align-items: start; }
 .node-symbol { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; background: #edf3ef; color: var(--green); }
 .node-symbol svg { width: 16px; }
 .node-copy h3 { font-size: 12px; margin: 1px 0 3px; }
 .node-copy p { color: #78817c; font-size: 10px; line-height: 1.4; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tiny { padding: 3px; }
-.card-menu { position: absolute; right: 8px; top: 38px; z-index: 5; width: 120px; padding: 5px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 8px 25px #27372f28; display: grid; }
+.card-menu { position: absolute; right: 8px; top: 38px; z-index: 21; width: 120px; padding: 5px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 8px 25px #27372f28; display: grid; }
 .card-menu button { text-align: left; border: 0; background: transparent; border-radius: 5px; padding: 7px; font-size: 10px; cursor: pointer; }
 .card-menu button:hover { background: #f2f2ed; }
 .card-menu .danger { color: #b34d45; }

@@ -48,6 +48,8 @@ the reason for maintaining separate browser manifests.
 - durable sync queue claim, completion, and retry behavior.
 - automatic repository reuse by description, collision suffixes, and
   initialization requests.
+- duplicate-title and normalized-URL upserts with preservation rules;
+- version 2 and legacy GitHub-to-IndexedDB restore behavior.
 
 Storage tests use `fake-indexeddb`, so they run deterministically without a real
 browser.

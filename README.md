@@ -14,6 +14,8 @@ Detailed engineering documentation starts at
 - Capture selected text from the browser context menu
 - Create, edit, archive, favorite, and delete knowledge nodes
 - Organize nodes with sections, tags, keywords, summaries, and Markdown notes
+- Add sections and tags as removable chips using comma or Enter
+- Upsert matching titles and normalized URLs without losing existing metadata
 - Fuzzy search titles, notes, metadata, sections, and URLs
 - Work offline with IndexedDB persistence
 - Import and export the complete graph as JSON
@@ -21,6 +23,7 @@ Detailed engineering documentation starts at
 - Resolve repository-name collisions with `_1`, `_2`, and later suffixes
 - Sync Markdown, `graph.json`, and a generated index to GitHub
 - Queue changes offline and retry them from the background runtime
+- Restore GitHub-backed knowledge into an empty IndexedDB after reconnecting
 
 ## Install in Chrome
 
@@ -66,6 +69,14 @@ card. Local IndexedDB data is preserved when reloading the extension.
 5. Select **Add to graph**.
 
 The node is saved locally before any network synchronization is attempted.
+Typing a comma or pressing Enter in Sections or Tags converts the value into a
+removable chip.
+
+When a URL already exists, KnowlegeGraph updates that node instead of creating a
+duplicate. A case-insensitive title match is used when there is no matching URL.
+Non-empty title, summary, and notes values update the existing node; blank
+summary or notes preserve prior content. Sections, tags, keywords, resources,
+and relationships are merged without case-insensitive duplicates.
 
 ### Capture selected text
 
@@ -115,6 +126,11 @@ initialized, connected, and populated during the same setup flow.
 The token remains in extension-local storage. It is never included in JSON
 exports, Markdown files, or GitHub commits. See the detailed
 [GitHub sync guide](./docs/features/github-sync.md).
+
+When an existing KnowlegeGraph repository is reused or connected, its graph is
+restored into IndexedDB before the next push. If local IndexedDB is empty but
+saved GitHub settings remain, the extension also attempts this restoration when
+the popup starts.
 
 ## Install temporarily in Firefox
 

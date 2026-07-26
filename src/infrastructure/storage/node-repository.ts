@@ -1,4 +1,8 @@
 import type { KnowledgeNode, NodeDraft } from "@/domain/knowledge-node/model";
+import {
+  findMatchingNode,
+  mergeNodeDraft,
+} from "@/domain/knowledge-node/merge";
 import { slugify } from "@/domain/knowledge-node/slug";
 import { requestBackgroundSync } from "@/infrastructure/browser/sync-trigger";
 import { database } from "./database";
@@ -9,23 +13,28 @@ import {
 
 export async function saveNode(draft: NodeDraft, existing?: KnowledgeNode) {
   const now = new Date().toISOString();
-  const node: KnowledgeNode = {
-    ...draft,
-    id: existing?.id ?? crypto.randomUUID(),
-    slug: slugify(draft.title),
-    archived: existing?.archived ?? false,
-    favorite: existing?.favorite ?? false,
-    createdAt: existing?.createdAt ?? now,
-    updatedAt: now,
-  };
+  let node!: KnowledgeNode;
 
   await database.transaction(
     "rw",
     [database.nodes, database.syncJobs],
     async () => {
+      const matched =
+        existing ??
+        findMatchingNode(await database.nodes.toArray(), draft);
+      const mergedDraft = matched ? mergeNodeDraft(matched, draft) : draft;
+      node = {
+        ...mergedDraft,
+        id: matched?.id ?? crypto.randomUUID(),
+        slug: slugify(mergedDraft.title),
+        archived: matched?.archived ?? false,
+        favorite: matched?.favorite ?? false,
+        createdAt: matched?.createdAt ?? now,
+        updatedAt: now,
+      };
       await database.nodes.put(node);
-      if (existing && existing.slug !== node.slug) {
-        await enqueueNodeDelete(`nodes/${existing.slug}.md`);
+      if (matched && matched.slug !== node.slug) {
+        await enqueueNodeDelete(`nodes/${matched.slug}.md`);
       }
       await enqueueNodeUpsert(node.id);
     },

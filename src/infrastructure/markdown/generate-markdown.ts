@@ -64,19 +64,9 @@ ${relationships}
 export function generateGraphJson(nodes: KnowledgeNode[]) {
   return JSON.stringify(
     {
-      version: 1,
+      version: 2,
       generatedAt: new Date().toISOString(),
-      nodes: nodes.map((node) => ({
-        id: node.id,
-        title: node.title,
-        slug: node.slug,
-        archived: node.archived,
-        favorite: node.favorite,
-        sections: node.sections,
-        tags: node.tags,
-        relations: node.relations,
-        updatedAt: node.updatedAt,
-      })),
+      nodes,
     },
     null,
     2,

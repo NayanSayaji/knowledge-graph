@@ -7,6 +7,7 @@ import type {
 import { CaptureForm } from "@/features/capture/components/CaptureForm";
 import { Library } from "@/features/library/components/Library";
 import { Settings } from "@/features/settings/components/Settings";
+import { restoreRemoteGraphIfLocalEmpty } from "@/features/sync/services/sync-service";
 import { getCurrentPage } from "@/infrastructure/browser/current-page";
 import { database } from "@/infrastructure/storage/database";
 import { Book, Network, Plus, Sliders } from "@/shared/ui/icons";
@@ -29,6 +30,7 @@ export default function App() {
 
   useEffect(() => {
     void loadCapture();
+    void restoreRemoteGraphIfLocalEmpty().catch(() => undefined);
   }, [loadCapture]);
 
   function navigate(next: View) {

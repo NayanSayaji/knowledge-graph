@@ -8,6 +8,7 @@ import { EMPTY_NODE_DRAFT } from "@/domain/knowledge-node/model";
 import { saveNode } from "@/infrastructure/storage/node-repository";
 import { splitCommaSeparated } from "@/shared/lib/collections";
 import { getDomain } from "@/shared/lib/url";
+import { ChipInput } from "@/shared/ui/ChipInput";
 import { Arrow, External, Spark, X } from "@/shared/ui/icons";
 import { nodeSchema } from "../model/node-validation";
 
@@ -143,22 +144,20 @@ export function CaptureForm({
       <div className="field-row">
         <label>
           <span>Sections</span>
-          <input
-            value={draft.sections.join(", ")}
-            onChange={(event) =>
-              update("sections", splitCommaSeparated(event.target.value))
-            }
+          <ChipInput
+            values={draft.sections}
+            onChange={(values) => update("sections", values)}
             placeholder="HLD, Backend"
+            ariaLabel="Add sections"
           />
         </label>
         <label>
           <span>Tags</span>
-          <input
-            value={draft.tags.join(", ")}
-            onChange={(event) =>
-              update("tags", splitCommaSeparated(event.target.value))
-            }
+          <ChipInput
+            values={draft.tags}
+            onChange={(values) => update("tags", values)}
             placeholder="interview, read"
+            ariaLabel="Add tags"
           />
         </label>
       </div>

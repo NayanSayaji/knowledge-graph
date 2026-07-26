@@ -40,8 +40,11 @@ describe("GitHub artifact generation", () => {
 
   it("generates graph metadata", () => {
     const graph = JSON.parse(generateGraphJson([node]));
+    expect(graph.version).toBe(2);
     expect(graph.nodes[0]).toMatchObject({
       id: "node-1",
+      notes: "Choose two is an oversimplification.",
+      resources: [expect.objectContaining({ url: "https://example.com/cap" })],
       relations: [{ targetId: "node-2", type: "related" }],
     });
   });

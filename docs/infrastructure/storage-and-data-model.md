@@ -52,6 +52,10 @@ Dexie is used because it provides:
 `node-repository.ts` owns node writes and lifecycle commands. Features should use
 this API rather than importing the database for mutations.
 
+New captures use URL-first/title-second upsert resolution. Merge rules preserve
+blank scalar fields, union multi-value metadata, and deduplicate resources by a
+normalized URL that ignores fragments and common tracking parameters.
+
 `graph-transfer.ts` owns the serialized backup format and transactional imports.
 
 `sync-queue.ts` owns durable GitHub work claiming, completion, retry release,

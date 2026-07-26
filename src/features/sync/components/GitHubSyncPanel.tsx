@@ -5,7 +5,10 @@ import {
   DEFAULT_GITHUB_SETTINGS,
   type GitHubSyncSettings,
 } from "@/domain/sync/model";
-import { syncPendingJobs } from "@/features/sync/services/sync-service";
+import {
+  restoreRemoteGraph,
+  syncPendingJobs,
+} from "@/features/sync/services/sync-service";
 import { GitHubClient } from "@/infrastructure/github/github-client";
 import {
   getGitHubSettings,
@@ -126,10 +129,13 @@ export function GitHubSyncPanel() {
       };
       await saveGitHubSettings(connectedSettings);
       setSettings(connectedSettings);
+      const restore = provision.created
+        ? { restored: 0, found: false }
+        : await restoreRemoteGraph(connectedSettings);
       await enqueueFullSync();
       const sync = await syncPendingJobs({ ignoreDisabled: true });
       setNotice(
-        `${provision.created ? "Created" : "Reused"} ${repository.full_name} and synced ${sync.synced} queued changes.`,
+        `${provision.created ? "Created" : "Reused"} ${repository.full_name}, restored ${restore.restored} nodes, and synced ${sync.synced} queued changes.`,
       );
     } catch (error) {
       reportError(error);
@@ -150,12 +156,13 @@ export function GitHubSyncPanel() {
     try {
       await new GitHubClient(settings).verifyConnection();
       await saveGitHubSettings(settings);
+      const restore = await restoreRemoteGraph(settings);
       await enqueueFullSync();
       const sync = await syncPendingJobs({ ignoreDisabled: true });
       setNotice(
         sync.commit
-          ? `Connected and synced. Commit ${sync.commit.slice(0, 7)}.`
-          : "Connected. Nothing was waiting to sync.",
+          ? `Restored ${restore.restored} nodes and synced. Commit ${sync.commit.slice(0, 7)}.`
+          : `Connected and restored ${restore.restored} nodes.`,
       );
     } catch (error) {
       reportError(error);

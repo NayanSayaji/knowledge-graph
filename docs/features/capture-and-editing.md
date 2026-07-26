@@ -49,7 +49,14 @@ The form edits:
 - the automatically captured primary resource.
 
 Comma-separated values are normalized by trimming whitespace, removing empty
-values, and deduplicating entries.
+values, and deduplicating entries. Sections and tags use a chip input:
+
+- comma or Enter commits the current value as a chip;
+- Backspace removes the final chip when the text field is empty;
+- each chip has an explicit remove control;
+- blur commits any unfinished value.
+
+Keywords retain the compact comma-separated input.
 
 ## Validation
 
@@ -61,13 +68,24 @@ repository boundary.
 
 ## Persistence
 
-On submit, `saveNode`:
+On submit, `saveNode` first resolves an upsert target:
+
+1. an explicitly edited node ID;
+2. a normalized resource URL match;
+3. a case-insensitive, whitespace-normalized title match.
+
+URL normalization removes fragments, common tracking parameters, query ordering
+differences, and trailing path slashes. When a target exists, non-empty scalar
+values replace previous values, blank summary/notes preserve previous content,
+and array/resource/relation fields are unioned.
+
+The repository then:
 
 1. creates or preserves the UUID;
 2. regenerates the slug from the current title;
 3. preserves favorite, archive, and creation state while editing;
 4. updates the modification timestamp;
-5. performs an IndexedDB `put`, which creates or replaces by ID.
+5. performs an IndexedDB `put`, which creates or replaces by ID;
 6. queues a GitHub upsert in the same database transaction.
 
 After the promise resolves, the app navigates to the library. Dexie's live query
@@ -78,6 +96,8 @@ attempts the queued sync when GitHub sync is enabled.
 
 - Only the captured resource is editable through the current form.
 - Relationship editing is represented in the model but not exposed in the UI.
-- Duplicate URL detection is planned but not yet enforced.
+- Existing duplicate records created by older versions are not automatically
+  collapsed; the upsert rules prevent new duplicates, while older extras can be
+  removed from Library.
 - Markdown preview is not rendered; notes are stored as Markdown-compatible
   source text.

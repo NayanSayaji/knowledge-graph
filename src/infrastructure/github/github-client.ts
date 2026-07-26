@@ -70,6 +70,10 @@ function encodeReference(reference: string) {
   return reference.split("/").map(encodeURIComponent).join("/");
 }
 
+function encodePath(path: string) {
+  return path.split("/").map(encodeURIComponent).join("/");
+}
+
 function encodeBase64(value: string) {
   const bytes = new TextEncoder().encode(value);
   let binary = "";
@@ -140,6 +144,25 @@ export class GitHubClient {
 
   async verifyConnection() {
     await this.getHead();
+  }
+
+  async getFileText(path: string) {
+    const response = await this.fetch(
+      this.repositoryPath(
+        `/contents/${encodePath(path)}?ref=${encodeURIComponent(this.settings.branch)}`,
+      ),
+      { headers: { Accept: "application/vnd.github.raw+json" } },
+    );
+    if (response.status === 404) return undefined;
+    if (!response.ok) {
+      const body = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
+      throw new Error(
+        `GitHub ${response.status}: ${body?.message ?? response.statusText}`,
+      );
+    }
+    return response.text();
   }
 
   async createAvailableRepository(
