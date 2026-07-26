@@ -16,11 +16,18 @@ Detailed design and implementation documentation starts at
 - Persist everything locally in IndexedDB
 - Import and export the complete graph as portable JSON
 - Sync Markdown, `graph.json`, and a generated index to GitHub
+- Create an initialized private GitHub repository automatically
+- Resolve repository-name collisions with `_1`, `_2`, and later suffixes
 - Queue changes offline and retry them from the background worker
 
 Richer relationship editing remains in the next product phases described in the
 [product HLD](./docs/product/high-level-design.md). See
 [GitHub sync](./docs/features/github-sync.md) for repository setup.
+
+GitHub setup is guided from Settings: create a preconfigured fine-grained token,
+paste it into KnowlegeGraph, edit the default `knowlege-base` repository name if
+desired, and select **Create repository & sync**. If the name already exists,
+KnowlegeGraph tries `knowlege-base_1`, `knowlege-base_2`, and so on.
 
 ## Architecture
 

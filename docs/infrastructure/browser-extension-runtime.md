@@ -14,7 +14,8 @@ The extension uses Manifest V3 and requests:
 | `alarms` | Retry durable GitHub sync work every minute |
 
 The `https://api.github.com/*` host permission allows the extension worker and
-popup to call GitHub. Page contents are not scraped.
+popup to authenticate the user, check repository names, create a repository,
+and sync Git objects. Page contents are not scraped.
 
 ## Popup entrypoint
 

@@ -4,21 +4,47 @@ KnowlegeGraph treats GitHub as a portable Markdown backup and version history,
 not as the primary database. Local saves complete immediately and do not depend
 on network availability.
 
-## Repository setup
+## Guided repository setup
 
-1. Create a GitHub repository with at least one initial commit. Selecting
-   **Add a README** while creating the repository is sufficient.
-2. Create a fine-grained personal access token restricted to that repository.
-3. Give it **Contents: Read and write** repository permission.
-4. In KnowlegeGraph Settings, enter the owner, repository, branch, destination
-   directory, and token.
-5. Select **Verify & sync now**.
+1. Open the GitHub backup panel in Settings.
+2. Select **Create token**. KnowlegeGraph opens GitHub's token form with
+   Administration and Contents write permissions prefilled.
+3. Choose the correct resource owner and **All repositories**. All-repository
+   access is necessary because the new repository does not exist yet and cannot
+   be selected individually.
+4. Generate the token and paste it into the password field.
+5. Keep or edit the default repository name `knowlege-base`.
+6. Choose whether the repository should be private. Private is the default.
+7. Select **Create repository & sync**.
+
+KnowlegeGraph authenticates the token, checks the requested name, and creates an
+initialized repository under the authenticated personal account. The API
+response supplies the actual owner and default branch, so neither needs to be
+entered manually.
+
+If the requested name already exists, the extension checks successive names:
+
+```text
+knowlege-base
+knowlege-base_1
+knowlege-base_2
+...
+```
+
+The first available name is used. The existence check and creation are separate
+GitHub requests, so a rare concurrent name collision may still produce a GitHub
+validation error; selecting the button again repeats discovery.
 
 GitHub recommends fine-grained tokens over classic personal access tokens. The
-Git Data endpoints used by this feature require repository Contents write
-permission. See GitHub's official
+repository-creation endpoint requires **Administration: write**, while the Git
+Data endpoints used for synchronization require **Contents: write**. See
+GitHub's official
 [credential guidance](https://docs.github.com/en/rest/authentication/keeping-your-api-credentials-secure)
-and [fine-grained permission reference](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens).
+and
+[repository creation reference](https://docs.github.com/en/rest/repos/repos#create-a-repository-for-the-authenticated-user).
+
+An existing, initialized repository can still be connected from the advanced
+section. This path requires its owner, repository, and branch.
 
 ## Generated repository layout
 
@@ -101,9 +127,10 @@ central revocation.
 
 ## Limitations
 
-- The target repository must already contain an initial commit.
-- Sync currently targets an existing branch; it does not create repositories or
-  branches.
+- Automatically created repositories target the authenticated personal account;
+  automatic organization-repository creation is not currently exposed.
+- Existing repositories must contain an initial commit.
+- Sync targets an existing branch and does not create additional branches.
 - Changing the destination directory does not remove artifacts previously
   synced to the old directory.
 - Background alarms are best-effort browser scheduling, not exact timers.

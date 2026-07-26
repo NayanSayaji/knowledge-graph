@@ -23,6 +23,57 @@ afterEach(() => {
 });
 
 describe("GitHub client", () => {
+  it("appends a numeric suffix until a repository name is available", async () => {
+    const createdBodies: unknown[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+        const url = String(input);
+        if (url.endsWith("/user")) {
+          return response({ login: "octocat" });
+        }
+        if (url.endsWith("/repos/octocat/knowlege-base")) {
+          return response({ id: 1 });
+        }
+        if (url.endsWith("/repos/octocat/knowlege-base_1")) {
+          return response({ id: 2 });
+        }
+        if (url.endsWith("/repos/octocat/knowlege-base_2")) {
+          return response({ message: "Not Found" }, 404);
+        }
+        if (url.endsWith("/user/repos") && init?.method === "POST") {
+          createdBodies.push(JSON.parse(init.body as string));
+          return response(
+            {
+              name: "knowlege-base_2",
+              full_name: "octocat/knowlege-base_2",
+              html_url: "https://github.com/octocat/knowlege-base_2",
+              private: true,
+              default_branch: "main",
+              owner: { login: "octocat" },
+            },
+            201,
+          );
+        }
+        throw new Error(`Unexpected request: ${url}`);
+      }),
+    );
+
+    const repository = await new GitHubClient(settings).createAvailableRepository(
+      "knowlege-base",
+      true,
+    );
+
+    expect(repository.name).toBe("knowlege-base_2");
+    expect(createdBodies).toEqual([
+      expect.objectContaining({
+        name: "knowlege-base_2",
+        private: true,
+        auto_init: true,
+      }),
+    ]);
+  });
+
   it("creates blobs, a tree, a commit, and fast-forwards the branch", async () => {
     let blobIndex = 0;
     const requests: Array<{ url: string; method: string; body?: string }> = [];
