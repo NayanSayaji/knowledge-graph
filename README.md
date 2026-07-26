@@ -1,6 +1,6 @@
-# Threadmark
+# KnowlegeGraph
 
-Threadmark is an offline-first browser extension that turns useful pages and
+KnowlegeGraph is an offline-first browser extension that turns useful pages and
 ideas into a searchable personal knowledge graph.
 
 Detailed design and implementation documentation starts at
@@ -15,10 +15,12 @@ Detailed design and implementation documentation starts at
 - Fuzzy search across titles, notes, metadata, and URLs
 - Persist everything locally in IndexedDB
 - Import and export the complete graph as portable JSON
+- Sync Markdown, `graph.json`, and a generated index to GitHub
+- Queue changes offline and retry them from the background worker
 
-GitHub/Markdown synchronization and richer relationship editing are reserved
-for the next product phases described in the
-[product HLD](./docs/product/high-level-design.md).
+Richer relationship editing remains in the next product phases described in the
+[product HLD](./docs/product/high-level-design.md). See
+[GitHub sync](./docs/features/github-sync.md) for repository setup.
 
 ## Architecture
 
@@ -56,7 +58,7 @@ Then:
 1. Open `chrome://extensions`.
 2. Enable **Developer mode**.
 3. Choose **Load unpacked** and select this project's `dist` directory.
-4. Pin Threadmark and open it from any page.
+4. Pin KnowlegeGraph and open it from any page.
 
 Firefox support can be added by packaging the same WebExtensions code with a
 Firefox-specific manifest.

@@ -1,6 +1,6 @@
 # Architecture overview
 
-Threadmark is an offline-first Manifest V3 browser extension. Its primary
+KnowlegeGraph is an offline-first Manifest V3 browser extension. Its primary
 database is IndexedDB in the user's browser. The popup is a React application,
 and a small background service worker handles browser events that must work
 while the popup is closed.
@@ -60,8 +60,11 @@ flowchart TD
   Library --> Search[Fuse.js search]
   Library --> Repository
   Settings --> Transfer[Graph import/export]
+  Settings --> Sync[GitHub sync]
   Repository --> DB[(IndexedDB via Dexie)]
   Transfer --> DB
+  Sync --> Queue[(Durable sync queue)]
+  Queue --> GitHub[GitHub Git Data API]
 ```
 
 The app shell owns only:
@@ -76,7 +79,7 @@ feature.
 
 ## Background runtime
 
-The background service worker registers the **Save to Threadmark** context menu.
+The background service worker registers the **Save to KnowlegeGraph** context menu.
 When invoked, it writes a small `pendingCapture` object to extension local
 storage. The popup consumes and removes that object the next time it opens.
 
@@ -90,9 +93,9 @@ This handoff is deliberately separate from the knowledge database:
 
 - Relationship editing belongs in a `features/relationships` feature and should
   use the existing domain `Relation` type.
-- Markdown generation belongs in `infrastructure/markdown`.
-- GitHub API access belongs in `infrastructure/github`.
-- Retry and conflict behavior belongs in `features/sync` plus
-  `infrastructure/storage` queue tables.
+- Markdown generation lives in `infrastructure/markdown`.
+- GitHub API access lives in `infrastructure/github`.
+- Retry behavior lives in `features/sync` plus the
+  `infrastructure/storage` queue table.
 - Search indexing can replace the current in-memory Fuse index behind the
   `searchNodes` function without changing Library components.

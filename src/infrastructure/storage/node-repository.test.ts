@@ -18,6 +18,7 @@ const draft = {
 
 afterEach(async () => {
   await database.nodes.clear();
+  await database.syncJobs.clear();
 });
 
 describe("knowledge storage", () => {
@@ -32,10 +33,12 @@ describe("knowledge storage", () => {
       slug: "cap-theorem",
       archived: false,
     });
+    expect(await database.syncJobs.count()).toBe(1);
   });
 
   it("imports exported nodes", async () => {
     await importGraph(JSON.stringify({ nodes: [{ ...draft, id: "1", slug: "cap-theorem", archived: false, favorite: false, createdAt: "2025-01-01", updatedAt: "2025-01-01" }] }));
     expect(await database.nodes.count()).toBe(1);
+    expect(await database.syncJobs.count()).toBe(1);
   });
 });

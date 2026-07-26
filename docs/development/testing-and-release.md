@@ -39,6 +39,8 @@ be verified through the unpacked extension.
 - empty-query search behavior;
 - fuzzy metadata search;
 - resource URL search.
+- Markdown, graph metadata, and repository index generation;
+- durable sync queue claim, completion, and retry behavior.
 
 Storage tests use `fake-indexeddb`, so they run deterministically without a real
 browser.
@@ -62,6 +64,7 @@ browser.
 - [ ] Confirm `dist/manifest.json` references `background.js`.
 - [ ] Load `dist/` as an unpacked extension.
 - [ ] Verify active-tab capture and context-menu capture.
+- [ ] Verify GitHub connection, immediate sync, and background retry.
 - [ ] Verify save, edit, search, archive, delete, export, and import.
 - [ ] Check the popup at its minimum supported dimensions.
 - [ ] Package the contents of `dist/`, not the repository root.
@@ -70,8 +73,8 @@ browser.
 
 - Request only permissions needed by a shipped feature.
 - Treat imported JSON as untrusted input.
-- Do not place GitHub or other service tokens in source or bundled environment
-  variables.
+- Do not place GitHub or other service tokens in source, exports, repository
+  artifacts, or bundled environment variables.
 - Store future tokens using an appropriate browser authentication flow and
   document their lifecycle.
 - Keep remote code out of the extension bundle to comply with Manifest V3.

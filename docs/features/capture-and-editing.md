@@ -68,9 +68,11 @@ On submit, `saveNode`:
 3. preserves favorite, archive, and creation state while editing;
 4. updates the modification timestamp;
 5. performs an IndexedDB `put`, which creates or replaces by ID.
+6. queues a GitHub upsert in the same database transaction.
 
 After the promise resolves, the app navigates to the library. Dexie's live query
-updates the visible list automatically.
+updates the visible list automatically. The background worker is notified and
+attempts the queued sync when GitHub sync is enabled.
 
 ## Current limitations
 

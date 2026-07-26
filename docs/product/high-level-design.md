@@ -864,6 +864,10 @@ Goal: Capture knowledge reliably.
 
 Goal: Make the knowledge base portable.
 
+> Implementation status: version 0.2 ships durable, atomic GitHub synchronization
+> using a fine-grained personal access token. GitHub App/OAuth authentication is
+> still planned for a wider public release.
+
 - GitHub OAuth
 - Generate markdown files
 - Generate `README.md`

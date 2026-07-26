@@ -24,10 +24,13 @@ mapping layer.
 
 ## IndexedDB and Dexie
 
-The database is named `threadmark`. Version 1 defines one `nodes` table:
+The underlying database remains named `threadmark` for migration compatibility:
+renaming an IndexedDB database would hide existing users' data. Version 2
+defines `nodes` and `syncJobs` tables:
 
 ```text
 id, title, slug, archived, favorite, createdAt, updatedAt, *tags, *sections
+++id, status, operation, nodeId, createdAt, claimedAt
 ```
 
 `id` is the primary key. Asterisks mark multi-entry indexes for array fields.
@@ -50,6 +53,9 @@ Dexie is used because it provides:
 this API rather than importing the database for mutations.
 
 `graph-transfer.ts` owns the serialized backup format and transactional imports.
+
+`sync-queue.ts` owns durable GitHub work claiming, completion, retry release,
+and recovery of claims left stale by a terminated Manifest V3 worker.
 
 The app shell currently reads through a Dexie live query. If read complexity
 grows, introduce query functions or a read repository without changing write

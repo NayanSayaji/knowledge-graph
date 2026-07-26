@@ -27,6 +27,27 @@ interface TreeChange {
   delete?: boolean;
 }
 
+async function mapWithConcurrency<T, R>(
+  values: T[],
+  limit: number,
+  mapper: (value: T) => Promise<R>,
+) {
+  const results = new Array<R>(values.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex < values.length) {
+      const index = nextIndex++;
+      results[index] = await mapper(values[index]);
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, values.length) }, () => worker()),
+  );
+  return results;
+}
+
 function encodeReference(reference: string) {
   return reference.split("/").map(encodeURIComponent).join("/");
 }
@@ -91,10 +112,13 @@ export class GitHubClient {
     );
     const existingPaths = new Set(baseTree.tree.map((item) => item.path));
 
-    const tree = await Promise.all(
-      changes
-        .filter((change) => !change.delete || existingPaths.has(change.path))
-        .map(async (change) => {
+    const applicableChanges = changes.filter(
+      (change) => !change.delete || existingPaths.has(change.path),
+    );
+    const tree = await mapWithConcurrency(
+      applicableChanges,
+      6,
+      async (change) => {
           if (change.delete) {
             return {
               path: change.path,
@@ -120,7 +144,7 @@ export class GitHubClient {
             type: "blob",
             sha: blob.sha,
           };
-        }),
+        },
     );
 
     if (!tree.length) return head;

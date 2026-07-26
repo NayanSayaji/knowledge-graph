@@ -49,8 +49,8 @@ Each card delegates state changes to repository functions:
 - selecting a card returns the full node to the app shell for editing.
 
 The UI deliberately does not call raw Dexie methods. Repository functions form
-the persistence boundary and are the place to add events, audit data, sync
-queue writes, or validation later.
+the persistence boundary. Each mutation and its sync job are written in one
+transaction, so a successful local change cannot be lost from the GitHub queue.
 
 ## Empty and no-result states
 

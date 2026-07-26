@@ -9,10 +9,12 @@ The extension uses Manifest V3 and requests:
 | Permission | Reason |
 | --- | --- |
 | `activeTab` | Read the current tab after the user opens the popup |
-| `storage` | Transfer a pending context-menu capture to the popup |
-| `contextMenus` | Register **Save to Threadmark** |
+| `storage` | Store capture handoff and GitHub configuration locally |
+| `contextMenus` | Register **Save to KnowlegeGraph** |
+| `alarms` | Retry durable GitHub sync work every minute |
 
-No host permissions are required for the MVP. Page contents are not scraped.
+The `https://api.github.com/*` host permission allows the extension worker and
+popup to call GitHub. Page contents are not scraped.
 
 ## Popup entrypoint
 
@@ -30,7 +32,8 @@ state are intentionally ephemeral.
 `background.js` file because the manifest must reference a stable service-worker
 name.
 
-On installation, it registers the context menu. On click, it collects:
+On installation, it registers the context menu and a one-minute sync alarm. On
+context-menu click, it collects:
 
 - the current tab title;
 - clicked-link URL or tab URL;
@@ -39,6 +42,9 @@ On installation, it registers the context menu. On click, it collects:
 It writes this payload to `chrome.storage.local` and attempts to open the popup.
 Popup opening is best-effort because browser policy can reject it in some
 contexts; the pending payload remains available for the next manual open.
+
+The worker also processes `SYNC_NOW` messages and scheduled alarms. Sync errors
+are returned to the durable queue for a later retry rather than discarded.
 
 ## Build
 

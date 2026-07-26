@@ -22,10 +22,13 @@
 │   ├── features/
 │   │   ├── capture/        # Create/edit form and validation
 │   │   ├── library/        # Search, filters, cards, and node actions
-│   │   └── settings/       # Data transfer and future integration status
+│   │   ├── settings/       # Data transfer and application settings
+│   │   └── sync/           # GitHub settings UI and sync orchestration
 │   ├── infrastructure/
 │   │   ├── browser/        # Chrome/WebExtensions adapters
-│   │   └── storage/        # Dexie database, repository, import/export
+│   │   ├── github/         # GitHub API and credential settings
+│   │   ├── markdown/       # Repository artifact generation
+│   │   └── storage/        # Dexie database, repositories, sync queue
 │   └── shared/
 │       ├── lib/            # Generic pure utility functions
 │       └── ui/             # Reusable presentational primitives

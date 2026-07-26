@@ -1,6 +1,6 @@
 # Import and export
 
-Threadmark uses JSON transfer files as the MVP portability and backup mechanism.
+KnowlegeGraph uses JSON transfer files as a portability and backup mechanism.
 IndexedDB remains the primary local database.
 
 ## Export format
@@ -27,8 +27,9 @@ clicks a programmatic download link, and immediately revokes the object URL.
 2. The Settings feature reads it as text.
 3. `importGraph` parses the JSON and checks for a top-level node array.
 4. `bulkPut` writes all records in one Dexie transaction.
-5. Existing records with matching IDs are updated; other local records remain.
-6. The live node query refreshes the UI.
+5. A full GitHub sync job is queued in the same transaction.
+6. Existing records with matching IDs are updated; other local records remain.
+7. The live node query refreshes the UI.
 
 The transaction makes the database write atomic: if the bulk operation fails,
 Dexie rolls back the transaction.

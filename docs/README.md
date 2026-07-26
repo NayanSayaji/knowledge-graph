@@ -1,6 +1,6 @@
-# Threadmark documentation
+# KnowlegeGraph documentation
 
-This folder is the engineering and product reference for Threadmark. The root
+This folder is the engineering and product reference for KnowlegeGraph. The root
 `README.md` is intentionally limited to setup and common commands; detailed
 implementation decisions live here.
 
@@ -19,6 +19,7 @@ implementation decisions live here.
 | [Capture and editing](features/capture-and-editing.md) | Current-tab detection, context-menu capture, validation, and saves |
 | [Library and search](features/library-and-search.md) | Live queries, fuzzy search, filters, and node actions |
 | [Import and export](features/import-and-export.md) | Portable JSON backups and transactional imports |
+| [GitHub sync](features/github-sync.md) | Repository setup, queue processing, artifacts, retries, and security |
 
 ## Infrastructure and operations
 
