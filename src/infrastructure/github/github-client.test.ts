@@ -26,6 +26,25 @@ afterEach(() => {
 });
 
 describe("GitHub client", () => {
+  it("rejects a private repository for the documentation portal", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        response({
+          name: "knowledge",
+          full_name: "octocat/knowledge",
+          private: true,
+          default_branch: "main",
+          owner: { login: "octocat" },
+        }),
+      ),
+    );
+
+    await expect(
+      new GitHubClient(settings).verifyPublicRepository(),
+    ).rejects.toThrow("requires a public repository");
+  });
+
   it("enables GitHub Pages with the workflow build type", async () => {
     const requests: Array<{ method: string; body?: string }> = [];
     vi.stubGlobal(

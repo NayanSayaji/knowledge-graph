@@ -151,6 +151,22 @@ export class GitHubClient {
     await this.getHead();
   }
 
+  async verifyPublicRepository() {
+    const repository = await this.getRepository(
+      this.settings.owner,
+      this.settings.repository,
+    );
+    if (!repository) {
+      throw new Error("GitHub repository could not be found.");
+    }
+    if (repository.private) {
+      throw new Error(
+        "The documentation portal requires a public repository. Change the repository visibility on GitHub, then sync again.",
+      );
+    }
+    return repository;
+  }
+
   async ensurePagesWorkflow() {
     const path = this.repositoryPath("/pages");
     const current = await this.fetch(path);

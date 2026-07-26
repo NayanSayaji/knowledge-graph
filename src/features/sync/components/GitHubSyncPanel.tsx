@@ -69,7 +69,6 @@ export function GitHubSyncPanel() {
     DEFAULT_GITHUB_SETTINGS,
   );
   const [repositoryName, setRepositoryName] = useState("knowlege-base");
-  const [privateRepository, setPrivateRepository] = useState(true);
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
   const [notice, setNotice] = useState("");
@@ -121,9 +120,14 @@ export function GitHubSyncPanel() {
       const provision =
         await new GitHubClient(settings).createAvailableRepository(
           result.data.repositoryName,
-          privateRepository,
+          false,
         );
       const repository = provision.repository;
+      if (repository.private) {
+        throw new Error(
+          "The matching KnowlegeGraph repository is private. Make it public on GitHub before syncing the documentation portal.",
+        );
+      }
       const connectedSettings: GitHubSyncSettings = {
         ...settings,
         enabled: true,
@@ -160,7 +164,9 @@ export function GitHubSyncPanel() {
     setWorking(true);
     setNotice("");
     try {
-      await new GitHubClient(settings).verifyConnection();
+      const client = new GitHubClient(settings);
+      await client.verifyPublicRepository();
+      await client.verifyConnection();
       await saveGitHubSettings(settings);
       const restore = await restoreRemoteGraph(settings);
       await enqueueFullSync();
@@ -279,10 +285,11 @@ export function GitHubSyncPanel() {
       <label className="toggle-row">
         <input
           type="checkbox"
-          checked={privateRepository}
-          onChange={(event) => setPrivateRepository(event.target.checked)}
+          checked={false}
+          disabled
+          readOnly
         />
-        <span>Create as a private repository</span>
+        <span>Private repository unavailable — GitHub Pages requires public access</span>
       </label>
       <button
         className="primary create-repository"
