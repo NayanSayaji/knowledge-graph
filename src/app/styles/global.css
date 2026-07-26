@@ -142,6 +142,11 @@ nav b { position: absolute; top: 9px; margin-left: 25px; min-width: 15px; height
 .github-heading { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 11px; align-items: center; margin-bottom: 16px; }
 .connected-repo { display: flex; align-items: center; justify-content: space-between; color: var(--green); background: #edf5f0; border: 1px solid #d7e7dd; border-radius: 8px; padding: 9px 10px; margin: -4px 0 15px; font-size: 9px; text-decoration: none; }
 .connected-repo svg { width: 13px; }
+.connected-configuration { display: grid; gap: 8px; margin: -4px 0 15px; }
+.connected-configuration .connected-repo { margin: 0; }
+.configuration-lock-note { margin: 0 !important; padding: 0 2px; color: #7d8782 !important; font-size: 8px !important; line-height: 1.5 !important; }
+.clear-token { justify-self: start; border-color: #d9cfc2; background: #f8f4ed; color: #765d42; }
+.clear-token:hover { background: #f2eadf; }
 .setup-step { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: start; margin: 14px 0 10px; }
 .setup-step strong { display: block; font-size: 10px; margin-top: 1px; }
 .setup-step p { margin-top: 2px; }
@@ -156,6 +161,13 @@ nav b { position: absolute; top: 9px; margin-left: 25px; min-width: 15px; height
 .toggle-row { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .toggle-row input { width: 15px; height: 15px; accent-color: var(--green); }
 .toggle-row > span { display: inline; margin: 0; color: #69736e; font-size: 9px; text-transform: none; letter-spacing: 0; }
+.public-repository-note { align-items: flex-start; margin: -2px 0 14px; padding: 9px 10px; border: 1px solid #e5ded1; border-radius: 8px; background: #f8f5ee; }
+.public-repository-note input { margin-top: 1px; }
+.public-repository-note > span { color: #796b58; line-height: 1.45; }
+.github-card input:disabled { border-color: #e4e4de; background: #f4f4f0; color: #7c8580; cursor: not-allowed; opacity: 1; }
+.github-card input[type="checkbox"]:disabled { opacity: .55; }
+.configuration-locked .setup-step, .configuration-locked .github-grid, .configuration-locked .existing-repository { opacity: .78; }
+.configuration-locked .token-field input { letter-spacing: .08em; }
 .sync-summary { display: flex; justify-content: space-between; color: #8a928e; font-size: 9px; margin: 3px 1px 10px; }
 .sync-error { color: #ae544c; }
 .github-card .button-row { justify-content: flex-end; align-items: center; }

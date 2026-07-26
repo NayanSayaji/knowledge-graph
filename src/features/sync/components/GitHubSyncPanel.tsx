@@ -209,7 +209,9 @@ export function GitHubSyncPanel() {
   }
 
   return (
-    <div className="settings-card github-card">
+    <div
+      className={`settings-card github-card${configurationLocked ? " configuration-locked" : ""}`}
+    >
       <div className="github-heading">
         <div className="setting-icon">
           <Network />
@@ -237,13 +239,19 @@ export function GitHubSyncPanel() {
             <External />
           </a>
           {configurationLocked && (
-            <button
-              className="secondary clear-token"
-              disabled={working}
-              onClick={() => void clearTokenAndUnlock()}
-            >
-              Clear PAT & edit setup
-            </button>
+            <>
+              <p className="configuration-lock-note">
+                Setup is locked after a successful connection. Clear the stored
+                PAT to change repository details.
+              </p>
+              <button
+                className="secondary clear-token"
+                disabled={working}
+                onClick={() => void clearTokenAndUnlock()}
+              >
+                Clear PAT & edit setup
+              </button>
+            </>
           )}
         </div>
       )}
@@ -317,7 +325,7 @@ export function GitHubSyncPanel() {
           />
         </label>
       </div>
-      <label className="toggle-row">
+      <label className="toggle-row public-repository-note">
         <input
           type="checkbox"
           checked={false}
