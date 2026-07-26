@@ -10,6 +10,10 @@
 │   └── product/            # Vision, requirements, and roadmap
 ├── manifests/
 │   └── firefox.json         # Firefox-specific Manifest V3 metadata
+├── portal/
+│   ├── src/                 # Generated documentation website
+│   ├── deploy-pages.yml     # GitHub Pages workflow template
+│   └── vite.config.ts       # Standalone static portal build
 ├── public/
 │   └── manifest.json       # Chrome Manifest V3 metadata copied into dist
 ├── scripts/
@@ -32,6 +36,7 @@
 │   │   ├── browser/        # Chrome/WebExtensions adapters
 │   │   ├── github/         # GitHub API and credential settings
 │   │   ├── markdown/       # Repository artifact generation
+│   │   ├── portal/         # Raw portal template synchronization
 │   │   └── storage/        # Dexie database, repositories, sync queue
 │   └── shared/
 │       ├── lib/            # Generic pure utility functions
@@ -40,6 +45,10 @@
 ├── vite.config.ts          # Popup/background multi-entry build
 └── tsconfig*.json          # Browser app and tooling TypeScript projects
 ```
+
+The extension and portal are separate Vite entry surfaces. The extension owns
+capture, local persistence, and synchronization. The portal is static,
+read-only, and consumes only generated repository artifacts.
 
 ## Placement rules
 

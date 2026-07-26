@@ -14,8 +14,11 @@ import {
   generateGraphJson,
   generateKnowledgeReadme,
   generateNodeMarkdown,
+  generateSectionsJson,
+  generateStatsJson,
 } from "@/infrastructure/markdown/generate-markdown";
 import { parseGeneratedNodeMarkdown } from "@/infrastructure/markdown/parse-markdown";
+import { getPortalTemplateChanges } from "@/infrastructure/portal/template";
 import { database } from "@/infrastructure/storage/database";
 import {
   claimPendingJobs,
@@ -266,13 +269,26 @@ export async function syncPendingJobs(options?: {
         content: generateGraphJson(allNodes),
       },
       {
+        path: prefixPath(settings.directory, "sections.json"),
+        content: generateSectionsJson(allNodes),
+      },
+      {
+        path: prefixPath(settings.directory, "stats.json"),
+        content: generateStatsJson(allNodes),
+      },
+      {
         path: "README.md",
-        content: generateKnowledgeReadme(allNodes, settings.directory),
+        content: generateKnowledgeReadme(
+          allNodes,
+          settings.directory,
+          `https://${settings.owner.toLowerCase()}.github.io/${settings.repository}/`,
+        ),
       },
       {
         path: prefixPath(settings.directory, "README.md"),
         delete: true,
       },
+      ...getPortalTemplateChanges(settings.directory, settings.branch),
     ];
     const changes = [
       ...new Map(rawChanges.map((change) => [change.path, change])).values(),

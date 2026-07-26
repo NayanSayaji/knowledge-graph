@@ -244,35 +244,51 @@ export class GitHubClient {
 
     if (!tree.length) return head;
 
-    const createdTree = await this.request<GitTree>(
-      this.repositoryPath("/git/trees"),
-      {
-        method: "POST",
-        body: JSON.stringify({ base_tree: parent.tree.sha, tree }),
-      },
-    );
-    const commit = await this.request<GitCommit>(
-      this.repositoryPath("/git/commits"),
-      {
-        method: "POST",
-        body: JSON.stringify({
-          message,
-          tree: createdTree.sha,
-          parents: [head],
-        }),
-      },
-    );
-    await this.request<GitReference>(
-      this.repositoryPath(
-        `/git/refs/heads/${encodeReference(this.settings.branch)}`,
-      ),
-      {
-        method: "PATCH",
-        body: JSON.stringify({ sha: commit.sha, force: false }),
-      },
-    );
+    try {
+      const createdTree = await this.request<GitTree>(
+        this.repositoryPath("/git/trees"),
+        {
+          method: "POST",
+          body: JSON.stringify({ base_tree: parent.tree.sha, tree }),
+        },
+      );
+      const commit = await this.request<GitCommit>(
+        this.repositoryPath("/git/commits"),
+        {
+          method: "POST",
+          body: JSON.stringify({
+            message,
+            tree: createdTree.sha,
+            parents: [head],
+          }),
+        },
+      );
+      await this.request<GitReference>(
+        this.repositoryPath(
+          `/git/refs/heads/${encodeReference(this.settings.branch)}`,
+        ),
+        {
+          method: "PATCH",
+          body: JSON.stringify({ sha: commit.sha, force: false }),
+        },
+      );
 
-    return commit.sha;
+      return commit.sha;
+    } catch (error) {
+      const includesWorkflow = applicableChanges.some((change) =>
+        change.path.startsWith(".github/workflows/"),
+      );
+      if (
+        includesWorkflow &&
+        error instanceof Error &&
+        error.message.includes("GitHub 403")
+      ) {
+        throw new Error(
+          "GitHub token cannot update the Pages workflow. Create or edit the fine-grained token with Workflows: Read and write, Contents: Read and write, and access to this repository, then paste it in Settings and sync again.",
+        );
+      }
+      throw error;
+    }
   }
 
   private async getHead() {

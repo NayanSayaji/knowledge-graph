@@ -22,6 +22,8 @@ Detailed engineering documentation starts at
 - Create an initialized GitHub repository automatically
 - Resolve repository-name collisions with `_1`, `_2`, and later suffixes
 - Sync Markdown, `graph.json`, and a generated index to GitHub
+- Generate a responsive React documentation portal from synced Markdown
+- Deploy search, graph, timeline, and statistics pages through GitHub Pages
 - Queue changes offline and retry them from the background runtime
 - Restore GitHub-backed knowledge into an empty IndexedDB after reconnecting
 
@@ -113,6 +115,7 @@ Import does not delete local nodes that are absent from the selected file.
 4. Confirm:
    - **Administration: Read and write**
    - **Contents: Read and write**
+   - **Workflows: Read and write**
 5. Generate the token and paste it into KnowlegeGraph.
 6. Keep or edit the default repository name `knowlege-base`.
 7. Keep **private repository** selected unless the notes should be public.
@@ -127,6 +130,12 @@ The generated dashboard is written to the repository's root `README.md`, so it
 is visible immediately when the repository opens. It contains status badges,
 favorites, collapsible section tables, and recently updated topics. The root
 README is managed by KnowlegeGraph and replaced on every successful sync.
+
+Each sync also writes a standalone React/Vite portal, `sections.json`,
+`stats.json`, and a GitHub Pages deployment workflow. The root README links to
+the deployed portal. See the
+[documentation portal guide](./docs/features/documentation-portal.md) for its
+routes, Markdown features, architecture, and first-deployment setup.
 
 The token remains in extension-local storage. It is never included in JSON
 exports, Markdown files, or GitHub commits. See the detailed
@@ -203,8 +212,9 @@ Rebuild the correct browser target and reload the extension from
 ### GitHub returns 403
 
 Recreate the fine-grained token with the correct resource owner, **All
-repositories**, Administration write, and Contents write. Organization policies
-may require administrator approval.
+repositories**, Administration write, Contents write, and Workflows write.
+Tokens created before the documentation portal was added must be updated or
+replaced. Organization policies may require administrator approval.
 
 ### GitHub says the repository or branch is unavailable
 

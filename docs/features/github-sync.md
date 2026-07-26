@@ -8,7 +8,7 @@ on network availability.
 
 1. Open the GitHub backup panel in Settings.
 2. Select **Create token**. KnowlegeGraph opens GitHub's token form with
-   Administration and Contents write permissions prefilled.
+   Administration, Contents, and Workflows write permissions prefilled.
 3. Choose the correct resource owner and **All repositories**. All-repository
    access is necessary because the new repository does not exist yet and cannot
    be selected individually.
@@ -48,7 +48,9 @@ validation error; selecting the button again repeats discovery.
 
 GitHub recommends fine-grained tokens over classic personal access tokens. The
 repository-creation endpoint requires **Administration: write**, while the Git
-Data endpoints used for synchronization require **Contents: write**. See
+Data endpoints used for synchronization require **Contents: write**. Writing
+the generated GitHub Pages workflow additionally requires **Workflows: write**.
+See
 GitHub's official
 [credential guidance](https://docs.github.com/en/rest/authentication/keeping-your-api-credentials-secure)
 and
@@ -65,16 +67,28 @@ With the default `knowledge` directory:
 README.md
 knowledge/
 ├── graph.json
+├── sections.json
+├── stats.json
 └── nodes/
     ├── cap-theorem.md
     └── redis-streams.md
+portal/
+├── src/
+├── package.json
+└── vite.config.ts
+.github/workflows/deploy-knowledge-portal.yml
 ```
 
 - Node files contain YAML front matter, notes, resources, and relationships.
 - `graph.json` version 2 contains complete nodes for restore, tooling, and
   visualization.
+- `sections.json` and `stats.json` provide generated portal navigation and
+  analytics.
+- `portal/` is the React/Vite documentation application automatically deployed
+  through the generated GitHub Pages workflow.
 - The root `README.md` is an interactive GitHub dashboard with badges, overview
-  counts, favorites, collapsible section tables, and recent updates.
+  counts, favorites, collapsible section tables, recent updates, and a link to
+  the documentation portal.
 
 KnowlegeGraph manages the root `README.md` and files beneath the configured
 directory. Any previous generated `<directory>/README.md` is removed during the
@@ -145,6 +159,10 @@ This produces one commit for the entire batch and preserves unrelated repository
 files except the explicitly managed root `README.md`. It follows GitHub's official
 [Git database workflow](https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-your-git-database)
 and [tree API](https://docs.github.com/en/rest/git/trees).
+
+Portal template files are included in the same atomic commit. A sync therefore
+updates Markdown, relationships, navigation, statistics, and deployable site
+source as one consistent repository snapshot.
 
 If another writer advances the branch during a sync, the non-force reference
 update fails. The jobs remain queued, allowing the next attempt to rebuild on

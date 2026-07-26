@@ -23,7 +23,8 @@ const TOKEN_CREATION_URL =
   "?name=KnowlegeGraph" +
   "&description=Create+and+sync+the+KnowlegeGraph+knowledge+repository" +
   "&administration=write" +
-  "&contents=write";
+  "&contents=write" +
+  "&workflows=write";
 const TOKEN_HELP_URL =
   "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens";
 
@@ -40,12 +41,9 @@ const createSchema = z.object({
     .string()
     .trim()
     .min(1, "Directory is required.")
-    .refine(
-      (value) =>
-        !value.startsWith("/") &&
-        !value.endsWith("/") &&
-        !value.split("/").includes(".."),
-      "Use a relative repository directory without '..'.",
+    .regex(
+      /^[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*$/,
+      "Use a relative path containing letters, numbers, dots, hyphens, or underscores.",
     ),
   token: z.string().trim().min(1, "Add a fine-grained access token first."),
 });
@@ -55,7 +53,14 @@ const existingSchema = createSchema
   .extend({
     owner: z.string().trim().min(1, "Repository owner is required."),
     repository: z.string().trim().min(1, "Repository name is required."),
-    branch: z.string().trim().min(1, "Branch is required."),
+    branch: z
+      .string()
+      .trim()
+      .min(1, "Branch is required.")
+      .regex(
+        /^[A-Za-z0-9._/-]+$/,
+        "Use a valid branch containing letters, numbers, dots, slashes, hyphens, or underscores.",
+      ),
   });
 
 export function GitHubSyncPanel() {
@@ -211,8 +216,8 @@ export function GitHubSyncPanel() {
         <div>
           <strong>Add a fine-grained token</strong>
           <p>
-            Select <b>All repositories</b>, then allow Administration and
-            Contents read/write.
+            Select <b>All repositories</b>, then allow Administration,
+            Contents, and Workflows read/write.
           </p>
         </div>
       </div>

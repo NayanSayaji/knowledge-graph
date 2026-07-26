@@ -191,4 +191,56 @@ describe("GitHub client", () => {
       "Create an initial commit first",
     );
   });
+
+  it("explains the workflow permission required for portal sync", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+        const url = String(input);
+        if (url.includes("/git/ref/heads/main")) {
+          return response({ object: { sha: "head-sha" } });
+        }
+        if (url.endsWith("/git/commits/head-sha")) {
+          return response({ sha: "head-sha", tree: { sha: "base-tree" } });
+        }
+        if (url.includes("/git/trees/base-tree?recursive=1")) {
+          return response({ sha: "base-tree", tree: [] });
+        }
+        if (url.endsWith("/git/blobs")) {
+          return response({ sha: "workflow-blob" }, 201);
+        }
+        if (url.endsWith("/git/trees")) {
+          return response({ sha: "new-tree", tree: [] }, 201);
+        }
+        if (url.endsWith("/git/commits")) {
+          return response(
+            { sha: "new-commit", tree: { sha: "new-tree" } },
+            201,
+          );
+        }
+        if (
+          url.includes("/git/refs/heads/main") &&
+          init?.method === "PATCH"
+        ) {
+          return response(
+            { message: "Resource not accessible by personal access token" },
+            403,
+          );
+        }
+        throw new Error(`Unexpected request: ${url}`);
+      }),
+    );
+
+    await expect(
+      new GitHubClient(settings).commitChanges(
+        [
+          {
+            path: ".github/workflows/deploy-knowledge-portal.yml",
+            content: "name: Deploy",
+          },
+        ],
+        "Sync portal",
+      ),
+    ).rejects.toThrow("Workflows: Read and write");
+  });
 });

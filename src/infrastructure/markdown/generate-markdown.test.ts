@@ -4,6 +4,8 @@ import {
   generateGraphJson,
   generateKnowledgeReadme,
   generateNodeMarkdown,
+  generateSectionsJson,
+  generateStatsJson,
 } from "./generate-markdown";
 
 const node: KnowledgeNode = {
@@ -67,5 +69,21 @@ describe("GitHub artifact generation", () => {
     expect(readme).toContain("![Knowledge nodes]");
     expect(readme).toContain("<details open>");
     expect(readme).toContain("<strong>HLD</strong> · 1 topic");
+  });
+
+  it("generates portal navigation and analytics", () => {
+    const sections = JSON.parse(generateSectionsJson([node]));
+    const stats = JSON.parse(generateStatsJson([node]));
+
+    expect(sections.sections).toEqual([
+      expect.objectContaining({ name: "HLD", slug: "hld", count: 1 }),
+    ]);
+    expect(stats).toMatchObject({
+      topics: 1,
+      sections: 1,
+      resources: 1,
+      relationships: 1,
+      resourceTypes: { article: 1 },
+    });
   });
 });

@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:portal": "vite --config portal/vite.config.ts",
     "build": "tsc -b && vite build",
+    "build:portal": "vite build --config portal/vite.config.ts",
     "build:chrome": "npm run build",
     "build:firefox": "tsc -b && vite build --outDir dist-firefox && node scripts/prepare-firefox.mjs",
     "build:all": "npm run build:chrome && npm run build:firefox",
@@ -15,7 +17,11 @@
   "dependencies": {
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
+    "dompurify": "^3.4.12",
     "fuse.js": "^7.1.0",
+    "highlight.js": "^11.11.1",
+    "marked": "^18.0.7",
+    "mermaid": "^11.16.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zod": "^3.25.56"

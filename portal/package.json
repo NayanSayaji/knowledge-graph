@@ -1,0 +1,26 @@
+{
+  "name": "knowlegegraph-documentation-portal",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build"
+  },
+  "dependencies": {
+    "dompurify": "^3.4.12",
+    "fuse.js": "^7.1.0",
+    "highlight.js": "^11.11.1",
+    "marked": "^18.0.7",
+    "mermaid": "^11.16.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.5.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
+}

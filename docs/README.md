@@ -20,6 +20,7 @@ implementation decisions live here.
 | [Library and search](features/library-and-search.md) | Live queries, fuzzy search, filters, and node actions |
 | [Import and export](features/import-and-export.md) | Portable JSON backups and transactional imports |
 | [GitHub sync](features/github-sync.md) | Repository setup, queue processing, artifacts, retries, and security |
+| [Documentation portal](features/documentation-portal.md) | Generated React website, routes, Markdown rendering, analytics, and Pages deployment |
 
 ## Infrastructure and operations
 
