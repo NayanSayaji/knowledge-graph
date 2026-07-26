@@ -62,8 +62,8 @@ section. This path requires its owner, repository, and branch.
 With the default `knowledge` directory:
 
 ```text
+README.md
 knowledge/
-├── README.md
 ├── graph.json
 └── nodes/
     ├── cap-theorem.md
@@ -73,9 +73,14 @@ knowledge/
 - Node files contain YAML front matter, notes, resources, and relationships.
 - `graph.json` version 2 contains complete nodes for restore, tooling, and
   visualization.
-- `README.md` groups active nodes by section and links to their Markdown files.
+- The root `README.md` is an interactive GitHub dashboard with badges, overview
+  counts, favorites, collapsible section tables, and recent updates.
 
-The extension only modifies files beneath the configured directory.
+KnowlegeGraph manages the root `README.md` and files beneath the configured
+directory. Any previous generated `<directory>/README.md` is removed during the
+next sync. Connecting an unrelated existing repository will replace its root
+README, so use a dedicated knowledge repository when custom root content must be
+preserved.
 
 ## Restore and reconnect
 
@@ -137,7 +142,7 @@ A sync batch uses GitHub's Git Data API:
 6. fast-forward the branch reference without force.
 
 This produces one commit for the entire batch and preserves unrelated repository
-files. It follows GitHub's official
+files except the explicitly managed root `README.md`. It follows GitHub's official
 [Git database workflow](https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-your-git-database)
 and [tree API](https://docs.github.com/en/rest/git/trees).
 

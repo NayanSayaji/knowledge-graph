@@ -123,6 +123,11 @@ the extension reuses it. If the description is different, it tries
 `knowlege-base_1`, `knowlege-base_2`, and so on. New repositories are
 initialized, connected, and populated during the same setup flow.
 
+The generated dashboard is written to the repository's root `README.md`, so it
+is visible immediately when the repository opens. It contains status badges,
+favorites, collapsible section tables, and recently updated topics. The root
+README is managed by KnowlegeGraph and replaced on every successful sync.
+
 The token remains in extension-local storage. It is never included in JSON
 exports, Markdown files, or GitHub commits. See the detailed
 [GitHub sync guide](./docs/features/github-sync.md).

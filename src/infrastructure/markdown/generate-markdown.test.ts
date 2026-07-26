@@ -50,8 +50,22 @@ describe("GitHub artifact generation", () => {
   });
 
   it("generates a section index", () => {
-    expect(generateKnowledgeReadme([node])).toContain(
-      "- [CAP Theorem](nodes/cap-theorem.md)",
+    const readme = generateKnowledgeReadme(
+      [
+        node,
+        {
+          ...node,
+          id: "legacy-duplicate",
+          updatedAt: "2025-12-01T00:00:00.000Z",
+        },
+      ],
+      "knowledge",
     );
+    expect(readme).toContain(
+      "[CAP Theorem](knowledge/nodes/cap-theorem.md)",
+    );
+    expect(readme).toContain("![Knowledge nodes]");
+    expect(readme).toContain("<details open>");
+    expect(readme).toContain("<strong>HLD</strong> · 1 topic");
   });
 });

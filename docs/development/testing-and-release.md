@@ -50,6 +50,7 @@ the reason for maintaining separate browser manifests.
   initialization requests.
 - duplicate-title and normalized-URL upserts with preservation rules;
 - version 2 and legacy GitHub-to-IndexedDB restore behavior.
+- root README dashboard rendering and legacy duplicate-path deduplication.
 
 Storage tests use `fake-indexeddb`, so they run deterministically without a real
 browser.

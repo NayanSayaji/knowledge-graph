@@ -266,8 +266,12 @@ export async function syncPendingJobs(options?: {
         content: generateGraphJson(allNodes),
       },
       {
+        path: "README.md",
+        content: generateKnowledgeReadme(allNodes, settings.directory),
+      },
+      {
         path: prefixPath(settings.directory, "README.md"),
-        content: generateKnowledgeReadme(allNodes),
+        delete: true,
       },
     ];
     const changes = [
