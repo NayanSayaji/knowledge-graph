@@ -107,9 +107,10 @@ Import does not delete local nodes that are absent from the selected file.
 7. Keep **private repository** selected unless the notes should be public.
 8. Select **Create repository & sync**.
 
-If `knowlege-base` exists, the extension automatically tries
-`knowlege-base_1`, `knowlege-base_2`, and so on. The repository is initialized,
-connected, and populated during the same setup flow.
+If `knowlege-base` already has KnowlegeGraph's generated-repository description,
+the extension reuses it. If the description is different, it tries
+`knowlege-base_1`, `knowlege-base_2`, and so on. New repositories are
+initialized, connected, and populated during the same setup flow.
 
 The token remains in extension-local storage. It is never included in JSON
 exports, Markdown files, or GitHub commits. See the detailed

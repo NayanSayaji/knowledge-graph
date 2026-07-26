@@ -46,7 +46,8 @@ the reason for maintaining separate browser manifests.
 - resource URL search.
 - Markdown, graph metadata, and repository index generation;
 - durable sync queue claim, completion, and retry behavior.
-- automatic repository naming, collision suffixes, and initialization requests.
+- automatic repository reuse by description, collision suffixes, and
+  initialization requests.
 
 Storage tests use `fake-indexeddb`, so they run deterministically without a real
 browser.

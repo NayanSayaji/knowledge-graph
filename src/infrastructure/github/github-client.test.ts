@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { GitHubSyncSettings } from "@/domain/sync/model";
-import { GitHubClient } from "./github-client";
+import {
+  GENERATED_REPOSITORY_DESCRIPTION,
+  GitHubClient,
+} from "./github-client";
 
 const settings: GitHubSyncSettings = {
   enabled: true,
@@ -23,6 +26,44 @@ afterEach(() => {
 });
 
 describe("GitHub client", () => {
+  it("reuses an existing repository created by KnowlegeGraph", async () => {
+    const createRequest = vi.fn();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request) => {
+        const url = String(input);
+        if (url.endsWith("/user")) {
+          return response({ login: "octocat" });
+        }
+        if (url.endsWith("/repos/octocat/knowlege-base")) {
+          return response({
+            name: "knowlege-base",
+            full_name: "octocat/knowlege-base",
+            html_url: "https://github.com/octocat/knowlege-base",
+            private: true,
+            default_branch: "main",
+            description: GENERATED_REPOSITORY_DESCRIPTION,
+            owner: { login: "octocat" },
+          });
+        }
+        createRequest();
+        throw new Error(`Unexpected request: ${url}`);
+      }),
+    );
+
+    const provision =
+      await new GitHubClient(settings).createAvailableRepository(
+        "knowlege-base",
+        true,
+      );
+
+    expect(provision).toMatchObject({
+      created: false,
+      repository: { full_name: "octocat/knowlege-base" },
+    });
+    expect(createRequest).not.toHaveBeenCalled();
+  });
+
   it("appends a numeric suffix until a repository name is available", async () => {
     const createdBodies: unknown[] = [];
     vi.stubGlobal(
@@ -59,12 +100,14 @@ describe("GitHub client", () => {
       }),
     );
 
-    const repository = await new GitHubClient(settings).createAvailableRepository(
-      "knowlege-base",
-      true,
-    );
+    const provision =
+      await new GitHubClient(settings).createAvailableRepository(
+        "knowlege-base",
+        true,
+      );
 
-    expect(repository.name).toBe("knowlege-base_2");
+    expect(provision.repository.name).toBe("knowlege-base_2");
+    expect(provision.created).toBe(true);
     expect(createdBodies).toEqual([
       expect.objectContaining({
         name: "knowlege-base_2",

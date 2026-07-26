@@ -109,10 +109,12 @@ export function GitHubSyncPanel() {
     setWorking(true);
     setNotice("Finding an available repository name…");
     try {
-      const repository = await new GitHubClient(settings).createAvailableRepository(
-        result.data.repositoryName,
-        privateRepository,
-      );
+      const provision =
+        await new GitHubClient(settings).createAvailableRepository(
+          result.data.repositoryName,
+          privateRepository,
+        );
+      const repository = provision.repository;
       const connectedSettings: GitHubSyncSettings = {
         ...settings,
         enabled: true,
@@ -127,7 +129,7 @@ export function GitHubSyncPanel() {
       await enqueueFullSync();
       const sync = await syncPendingJobs({ ignoreDisabled: true });
       setNotice(
-        `Created ${repository.full_name} and synced ${sync.synced} queued changes.`,
+        `${provision.created ? "Created" : "Reused"} ${repository.full_name} and synced ${sync.synced} queued changes.`,
       );
     } catch (error) {
       reportError(error);
@@ -237,7 +239,10 @@ export function GitHubSyncPanel() {
         <span className="step-number">2</span>
         <div>
           <strong>Create your knowledge repository</strong>
-          <p>If the name exists, `_1`, `_2`, and so on are tried automatically.</p>
+          <p>
+            Matching KnowlegeGraph repositories are reused; other name conflicts
+            get `_1`, `_2`, and later suffixes.
+          </p>
         </div>
       </div>
       <div className="github-grid">
