@@ -28,6 +28,7 @@ implementation decisions live here.
 | [Storage and data model](infrastructure/storage-and-data-model.md) | IndexedDB schema, repository API, and model design |
 | [Browser extension runtime](infrastructure/browser-extension-runtime.md) | Manifest, popup, background worker, permissions, and build outputs |
 | [Development and testing](development/testing-and-release.md) | Local workflow, test strategy, build validation, and release checklist |
+| [Browser installation](development/browser-installation.md) | Chrome loading, Firefox temporary installation, and browser-specific manifests |
 
 ## Documentation convention
 

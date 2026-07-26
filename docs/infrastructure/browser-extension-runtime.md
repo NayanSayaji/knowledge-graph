@@ -1,8 +1,10 @@
 # Browser extension runtime
 
-## Manifest
+## Manifests
 
-`public/manifest.json` is copied unchanged into `dist/manifest.json`.
+`public/manifest.json` is copied into the Chrome build at
+`dist/manifest.json`. `manifests/firefox.json` replaces it in the Firefox build
+at `dist-firefox/manifest.json`.
 
 The extension uses Manifest V3 and requests:
 
@@ -47,6 +49,12 @@ contexts; the pending payload remains available for the next manual open.
 The worker also processes `SYNC_NOW` messages and scheduled alarms. Sync errors
 are returned to the durable queue for a later retry rather than discarded.
 
+Chrome loads `background.js` as a Manifest V3 service worker. Firefox does not
+support extension service workers, so its manifest loads the same ES module
+through `background.scripts` as a non-persistent event page. Application code
+does not depend on service-worker-only globals, allowing the same generated
+module graph to run in both environments.
+
 ## Build
 
 Vite has two Rollup inputs:
@@ -57,7 +65,7 @@ Vite has two Rollup inputs:
 Hashed filenames are used for popup CSS and JavaScript. The background entry has
 the fixed `background.js` filename expected by the manifest.
 
-Expected production output:
+Expected Chrome output:
 
 ```text
 dist/
@@ -68,6 +76,13 @@ dist/
 ├── index.html
 └── manifest.json
 ```
+
+The Firefox build has the same file layout under `dist-firefox/`, with the
+Firefox-specific manifest containing:
+
+- `background.scripts` instead of `background.service_worker`;
+- a stable `browser_specific_settings.gecko.id`;
+- a minimum supported Firefox version.
 
 ## Cross-browser direction
 

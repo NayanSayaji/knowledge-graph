@@ -8,8 +8,12 @@
 │   ├── features/           # User-visible implementation flows
 │   ├── infrastructure/     # Browser and persistence implementation
 │   └── product/            # Vision, requirements, and roadmap
+├── manifests/
+│   └── firefox.json         # Firefox-specific Manifest V3 metadata
 ├── public/
-│   └── manifest.json       # Manifest V3 metadata copied into dist
+│   └── manifest.json       # Chrome Manifest V3 metadata copied into dist
+├── scripts/
+│   └── prepare-firefox.mjs # Installs the Firefox manifest after Vite build
 ├── src/
 │   ├── app/
 │   │   ├── App.tsx         # Top-level state and navigation composition

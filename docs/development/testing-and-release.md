@@ -13,12 +13,14 @@ npm install          # Install locked dependencies
 npm run dev          # Start the popup UI development server
 npm run typecheck    # Validate all TypeScript projects
 npm test             # Run unit and storage tests once
-npm run build        # Typecheck and create dist/
+npm run build:chrome # Typecheck and create dist/
+npm run build:firefox # Typecheck and create dist-firefox/
+npm run build:all    # Create both browser artifacts
 ```
 
 ## Local extension installation
 
-1. Run `npm run build`.
+1. Run `npm run build:chrome`.
 2. Open `chrome://extensions`.
 3. Enable **Developer mode**.
 4. Select **Load unpacked**.
@@ -28,6 +30,9 @@ npm run build        # Typecheck and create dist/
 The Vite development server is useful for popup layout and feature work but
 does not emulate all extension APIs. Context menus and active-tab behavior must
 be verified through the unpacked extension.
+
+See [Browser installation](browser-installation.md) for Firefox development and
+the reason for maintaining separate browser manifests.
 
 ## Test strategy
 
@@ -61,8 +66,9 @@ browser.
 - [ ] Run `npm ci`.
 - [ ] Run `npm run typecheck`.
 - [ ] Run `npm test`.
-- [ ] Run `npm run build`.
-- [ ] Confirm `dist/manifest.json` references `background.js`.
+- [ ] Run `npm run build:all`.
+- [ ] Confirm the Chrome manifest uses `background.service_worker`.
+- [ ] Confirm the Firefox manifest uses `background.scripts`.
 - [ ] Load `dist/` as an unpacked extension.
 - [ ] Verify active-tab capture and context-menu capture.
 - [ ] Verify GitHub connection, immediate sync, and background retry.

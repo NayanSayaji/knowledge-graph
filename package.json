@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:chrome": "npm run build",
+    "build:firefox": "tsc -b && vite build --outDir dist-firefox && node scripts/prepare-firefox.mjs",
+    "build:all": "npm run build:chrome && npm run build:firefox",
     "typecheck": "tsc -b",
     "test": "vitest run"
   },
