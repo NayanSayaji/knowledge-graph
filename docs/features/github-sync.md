@@ -14,13 +14,29 @@ on network availability.
    be selected individually.
 4. Generate the token and paste it into the password field.
 5. Keep or edit the default repository name `knowlege-base`.
-6. Choose whether the repository should be private. Private is the default.
-7. Select **Create repository & sync**.
+6. Select **Create repository & sync**.
 
 KnowlegeGraph authenticates the token, checks the requested name, and creates an
-initialized repository under the authenticated personal account. The API
+initialized public repository under the authenticated personal account. The API
 response supplies the actual owner and default branch, so neither needs to be
 entered manually.
+
+The private-repository option is visible but disabled because this setup
+publishes the generated portal through GitHub Pages. Existing repositories must
+also be public: connection verification stops before any write when GitHub
+reports a private destination.
+
+After a successful automatic setup, manual connection, or sync, the token,
+repository, branch, directory, and background-sync controls are locked. This
+keeps an active destination from being changed accidentally. Select
+**Clear PAT & edit setup** to:
+
+- remove the PAT from extension-local storage;
+- pause background synchronization;
+- unlock the setup controls;
+- preserve owner, repository, branch, and directory values for reconnection.
+
+Paste a new token and verify or sync again to lock the connection.
 
 When a matching KnowlegeGraph repository is reused, its remote `graph.json` is
 read and merged into IndexedDB before any new commit is created. Connecting an
@@ -59,7 +75,8 @@ and
 [repository creation reference](https://docs.github.com/en/rest/repos/repos#create-a-repository-for-the-authenticated-user).
 
 An existing, initialized repository can still be connected from the advanced
-section. This path requires its owner, repository, and branch.
+section. This path requires its owner, repository, and branch, and verifies that
+the repository is public before enabling synchronization.
 
 ## Generated repository layout
 
@@ -177,6 +194,8 @@ the newer head.
 - It is sent only to `https://api.github.com`.
 - The manifest requests no broad web host access.
 - A token should be limited to one repository and revoked when no longer used.
+- Clearing the PAT removes the local credential and pauses background sync; it
+  does not delete the GitHub repository or local knowledge.
 
 Browser local storage is not a hardware-backed secret vault. OAuth via a GitHub
 App is the preferred future approach for wider distribution, token rotation, and
@@ -186,6 +205,7 @@ central revocation.
 
 - Automatically created repositories target the authenticated personal account;
   automatic organization-repository creation is not currently exposed.
+- This release supports public GitHub Pages repositories only.
 - Existing repositories must contain an initial commit.
 - Sync targets an existing branch and does not create additional branches.
 - Changing the destination directory does not remove artifacts previously

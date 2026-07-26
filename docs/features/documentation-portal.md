@@ -59,6 +59,11 @@ is stored only in browser local storage. The persistent desktop sidebar becomes
 a compact horizontal navigation bar on smaller screens, while topic sidebars
 move below their content.
 
+The visual system uses a quiet paper-and-ink palette, restrained green accents,
+thin borders, and limited shadows. Inter Variable is used for interface text
+and Newsreader Variable for editorial headings. Both fonts are bundled with the
+portal, so the deployed site makes no third-party font requests.
+
 ## GitHub Pages deployment
 
 KnowlegeGraph writes
@@ -74,14 +79,20 @@ On every synchronized knowledge or portal change, the workflow:
 Before committing the generated workflow, KnowlegeGraph checks the repository's
 Pages configuration and creates or updates it to use GitHub Actions. This uses
 the fine-grained token directly because the workflow's built-in token cannot
-enable Pages. Private-repository Pages availability depends on the repository
-owner's GitHub plan.
+enable Pages. KnowlegeGraph currently requires a public repository for this
+flow. Automatically created repositories are public, and existing private
+repositories are rejected before synchronization.
 
 The fine-grained token must include **Workflows: read and write** and
 **Pages: read and write** in addition to Contents and Administration. Workflows
 allows sync to maintain `.github/workflows/`; Pages allows the extension to
 enable the site. Tokens created before the portal feature must be edited or
 replaced before the first portal sync.
+
+After a successful connection, the GitHub setup controls remain locked. Use
+**Clear PAT & edit setup** when the token must be rotated or the destination
+must be changed; this clears the locally stored credential and pauses
+background sync without deleting the remote repository.
 
 ## Local development
 

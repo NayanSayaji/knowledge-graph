@@ -119,13 +119,23 @@ Import does not delete local nodes that are absent from the selected file.
    - **Pages: Read and write**
 5. Generate the token and paste it into KnowlegeGraph.
 6. Keep or edit the default repository name `knowlege-base`.
-7. Keep **private repository** selected unless the notes should be public.
-8. Select **Create repository & sync**.
+7. Select **Create repository & sync**.
 
 If `knowlege-base` already has KnowlegeGraph's generated-repository description,
 the extension reuses it. If the description is different, it tries
 `knowlege-base_1`, `knowlege-base_2`, and so on. New repositories are
 initialized, connected, and populated during the same setup flow.
+
+Automatically created repositories are public so the generated site can be
+served through GitHub Pages. The private-repository control is intentionally
+disabled. When connecting an existing repository, make it public before
+selecting **Verify & enable sync**; KnowlegeGraph rejects private destinations.
+
+After the first successful create or sync, the token and destination fields are
+locked to prevent accidental changes to a working connection. Select
+**Clear PAT & edit setup** to remove the locally stored token, pause background
+sync, and unlock the fields. Repository details are preserved so a replacement
+token can be pasted without re-entering the destination.
 
 The generated dashboard is written to the repository's root `README.md`, so it
 is visible immediately when the repository opens. It contains status badges,
@@ -217,6 +227,16 @@ repositories**, Administration write, Contents write, and Workflows write.
 Also grant Pages write so the extension can enable GitHub Pages before its first
 deployment. Tokens created before the documentation portal was added must be
 updated or replaced. Organization policies may require administrator approval.
+
+If the token field is locked, select **Clear PAT & edit setup**, create or paste
+the replacement token, and run **Create repository & sync** or
+**Verify & enable sync** again.
+
+### KnowlegeGraph says the repository must be public
+
+Change the repository visibility under **GitHub → repository Settings →
+General → Danger Zone → Change repository visibility**, then retry the
+connection. Automatically created repositories are already public.
 
 ### GitHub says the repository or branch is unavailable
 
