@@ -78,7 +78,7 @@ export function Settings({ nodeCount }: SettingsProps) {
       <GitHubSyncPanel />
       {notice && <div className="toast">{notice}</div>}
       <p className="version">
-        KnowlegeGraph 0.4.1 · Your knowledge belongs to you.
+        KnowlegeGraph 0.4.2 · Your knowledge belongs to you.
       </p>
     </section>
   );
