@@ -223,7 +223,20 @@ export function App() {
   return (
     <div className="portal-shell">
       <aside className="sidebar">
-        <a className="logo" href="#/"><span>⌘</span> KnowlegeGraph</a>
+        <a className="logo" href="#/">
+          <span aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <circle cx="16" cy="6" r="3" />
+              <circle cx="7" cy="23" r="3" />
+              <circle cx="25" cy="23" r="3" />
+              <path d="M14.5 8.7 8.6 20M17.5 8.7 23.4 20M10 23h12" />
+            </svg>
+          </span>
+          <span className="logo-copy">
+            <strong>KnowlegeGraph</strong>
+            <small>Developer field notes</small>
+          </span>
+        </a>
         <nav><a className={route === "/" ? "active" : ""} href="#/">Overview</a><a href="#/search">Topics</a><a href="#/graph">Graph</a><a href="#/timeline">Timeline</a><a href="#/stats">Statistics</a></nav>
         <p className="nav-label">Sections</p><div className="section-links">{sections.map((section) => <a key={section.name} href={`#/section/${encodeURIComponent(section.name)}`}>{section.name}<span>{section.count}</span></a>)}</div>
       </aside>
