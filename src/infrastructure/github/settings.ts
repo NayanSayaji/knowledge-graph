@@ -32,3 +32,13 @@ export async function saveGitHubSettings(settings: GitHubSyncSettings) {
 
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
+
+export function withoutGitHubToken(
+  settings: GitHubSyncSettings,
+): GitHubSyncSettings {
+  return {
+    ...settings,
+    enabled: false,
+    token: "",
+  };
+}

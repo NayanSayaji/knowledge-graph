@@ -13,6 +13,7 @@ import { GitHubClient } from "@/infrastructure/github/github-client";
 import {
   getGitHubSettings,
   saveGitHubSettings,
+  withoutGitHubToken,
 } from "@/infrastructure/github/settings";
 import { database } from "@/infrastructure/storage/database";
 import { enqueueFullSync } from "@/infrastructure/storage/sync-queue";
@@ -71,6 +72,7 @@ export function GitHubSyncPanel() {
   const [repositoryName, setRepositoryName] = useState("knowlege-base");
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
+  const [configurationLocked, setConfigurationLocked] = useState(false);
   const [notice, setNotice] = useState("");
   const pendingCount =
     useLiveQuery(() =>
@@ -88,6 +90,11 @@ export function GitHubSyncPanel() {
   useEffect(() => {
     void getGitHubSettings().then((stored) => {
       setSettings(stored);
+      setConfigurationLocked(
+        Boolean(
+          stored.token.trim() && stored.owner.trim() && stored.repository.trim(),
+        ),
+      );
       setLoading(false);
     });
   }, []);
@@ -101,6 +108,16 @@ export function GitHubSyncPanel() {
 
   function reportError(error: unknown) {
     setNotice(error instanceof Error ? error.message : "GitHub setup failed.");
+  }
+
+  async function clearTokenAndUnlock() {
+    const unlocked = withoutGitHubToken(settings);
+    await saveGitHubSettings(unlocked);
+    setSettings(unlocked);
+    setConfigurationLocked(false);
+    setNotice(
+      "Token cleared and background sync paused. Repository settings are editable.",
+    );
   }
 
   async function createRepositoryAndSync() {
@@ -144,6 +161,7 @@ export function GitHubSyncPanel() {
         : await restoreRemoteGraph(connectedSettings);
       await enqueueFullSync();
       const sync = await syncPendingJobs({ ignoreDisabled: true });
+      setConfigurationLocked(true);
       setNotice(
         `${provision.created ? "Created" : "Reused"} ${repository.full_name}, restored ${restore.restored} nodes, and synced ${sync.synced} queued changes.`,
       );
@@ -171,6 +189,7 @@ export function GitHubSyncPanel() {
       const restore = await restoreRemoteGraph(settings);
       await enqueueFullSync();
       const sync = await syncPendingJobs({ ignoreDisabled: true });
+      setConfigurationLocked(true);
       setNotice(
         sync.commit
           ? `Restored ${restore.restored} nodes and synced. Commit ${sync.commit.slice(0, 7)}.`
@@ -205,17 +224,28 @@ export function GitHubSyncPanel() {
       </div>
 
       {connected && (
-        <a
-          className="connected-repo"
-          href={`https://github.com/${settings.owner}/${settings.repository}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span>
-            Connected to <strong>{settings.owner}/{settings.repository}</strong>
-          </span>
-          <External />
-        </a>
+        <div className="connected-configuration">
+          <a
+            className="connected-repo"
+            href={`https://github.com/${settings.owner}/${settings.repository}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>
+              Connected to <strong>{settings.owner}/{settings.repository}</strong>
+            </span>
+            <External />
+          </a>
+          {configurationLocked && (
+            <button
+              className="secondary clear-token"
+              disabled={working}
+              onClick={() => void clearTokenAndUnlock()}
+            >
+              Clear PAT & edit setup
+            </button>
+          )}
+        </div>
       )}
 
       <div className="setup-step">
@@ -240,17 +270,20 @@ export function GitHubSyncPanel() {
             type="password"
             autoComplete="off"
             value={settings.token}
+            disabled={configurationLocked || working}
             onChange={(event) => update("token", event.target.value)}
             placeholder="github_pat_…"
           />
-          <a
-            className="secondary create-token"
-            href={TOKEN_CREATION_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Create token <External />
-          </a>
+          {!configurationLocked && (
+            <a
+              className="secondary create-token"
+              href={TOKEN_CREATION_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Create token <External />
+            </a>
+          )}
         </div>
       </label>
 
@@ -269,6 +302,7 @@ export function GitHubSyncPanel() {
           <span>Repository name</span>
           <input
             value={repositoryName}
+            disabled={configurationLocked || working}
             onChange={(event) => setRepositoryName(event.target.value)}
             placeholder="knowlege-base"
           />
@@ -277,6 +311,7 @@ export function GitHubSyncPanel() {
           <span>Knowledge directory</span>
           <input
             value={settings.directory}
+            disabled={configurationLocked || working}
             onChange={(event) => update("directory", event.target.value)}
             placeholder="knowledge"
           />
@@ -293,7 +328,9 @@ export function GitHubSyncPanel() {
       </label>
       <button
         className="primary create-repository"
-        disabled={working || !settings.token.trim()}
+        disabled={
+          working || configurationLocked || !settings.token.trim()
+        }
         onClick={createRepositoryAndSync}
       >
         {working ? "Setting up…" : "Create repository & sync"}
@@ -307,6 +344,7 @@ export function GitHubSyncPanel() {
             <span>Owner</span>
             <input
               value={settings.owner}
+              disabled={configurationLocked || working}
               onChange={(event) => update("owner", event.target.value)}
               placeholder="octocat"
             />
@@ -315,6 +353,7 @@ export function GitHubSyncPanel() {
             <span>Repository</span>
             <input
               value={settings.repository}
+              disabled={configurationLocked || working}
               onChange={(event) => update("repository", event.target.value)}
               placeholder="knowlege-base"
             />
@@ -323,6 +362,7 @@ export function GitHubSyncPanel() {
             <span>Branch</span>
             <input
               value={settings.branch}
+              disabled={configurationLocked || working}
               onChange={(event) => update("branch", event.target.value)}
               placeholder="main"
             />
@@ -331,12 +371,17 @@ export function GitHubSyncPanel() {
             <input
               type="checkbox"
               checked={settings.enabled}
+              disabled={configurationLocked || working}
               onChange={(event) => update("enabled", event.target.checked)}
             />
             <span>Background sync</span>
           </label>
         </div>
-        <button className="secondary" disabled={working} onClick={saveExisting}>
+        <button
+          className="secondary"
+          disabled={working || configurationLocked}
+          onClick={saveExisting}
+        >
           Verify existing repository & sync
         </button>
       </details>
