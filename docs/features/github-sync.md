@@ -8,7 +8,7 @@ on network availability.
 
 1. Open the GitHub backup panel in Settings.
 2. Select **Create token**. KnowlegeGraph opens GitHub's token form with
-   Administration, Contents, and Workflows write permissions prefilled.
+   Administration, Contents, Workflows, and Pages write permissions prefilled.
 3. Choose the correct resource owner and **All repositories**. All-repository
    access is necessary because the new repository does not exist yet and cannot
    be selected individually.
@@ -50,6 +50,8 @@ GitHub recommends fine-grained tokens over classic personal access tokens. The
 repository-creation endpoint requires **Administration: write**, while the Git
 Data endpoints used for synchronization require **Contents: write**. Writing
 the generated GitHub Pages workflow additionally requires **Workflows: write**.
+Automatic first-time Pages enablement requires **Pages: write** together with
+**Administration: write**.
 See
 GitHub's official
 [credential guidance](https://docs.github.com/en/rest/authentication/keeping-your-api-credentials-secure)

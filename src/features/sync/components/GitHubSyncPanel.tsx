@@ -24,7 +24,8 @@ const TOKEN_CREATION_URL =
   "&description=Create+and+sync+the+KnowlegeGraph+knowledge+repository" +
   "&administration=write" +
   "&contents=write" +
-  "&workflows=write";
+  "&workflows=write" +
+  "&pages=write";
 const TOKEN_HELP_URL =
   "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens";
 
@@ -217,7 +218,7 @@ export function GitHubSyncPanel() {
           <strong>Add a fine-grained token</strong>
           <p>
             Select <b>All repositories</b>, then allow Administration,
-            Contents, and Workflows read/write.
+            Contents, Workflows, and Pages read/write.
           </p>
         </div>
       </div>

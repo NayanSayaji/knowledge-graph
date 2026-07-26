@@ -21,6 +21,11 @@ interface GitBlob {
   sha: string;
 }
 
+interface GitHubPagesSite {
+  html_url?: string;
+  build_type?: "legacy" | "workflow";
+}
+
 interface TreeChange {
   path: string;
   content?: string;
@@ -144,6 +149,44 @@ export class GitHubClient {
 
   async verifyConnection() {
     await this.getHead();
+  }
+
+  async ensurePagesWorkflow() {
+    const path = this.repositoryPath("/pages");
+    const current = await this.fetch(path);
+    if (current.status === 404) {
+      const created = await this.fetch(path, {
+        method: "POST",
+        body: JSON.stringify({ build_type: "workflow" }),
+      });
+      if (!created.ok) await this.throwPagesError(created);
+      return (await created.json()) as GitHubPagesSite;
+    }
+    if (!current.ok) await this.throwPagesError(current);
+
+    const site = (await current.json()) as GitHubPagesSite;
+    if (site.build_type !== "workflow") {
+      const updated = await this.fetch(path, {
+        method: "PUT",
+        body: JSON.stringify({ build_type: "workflow" }),
+      });
+      if (!updated.ok) await this.throwPagesError(updated);
+    }
+    return site;
+  }
+
+  private async throwPagesError(response: Response): Promise<never> {
+    const body = (await response.json().catch(() => null)) as {
+      message?: string;
+    } | null;
+    if (response.status === 403) {
+      throw new Error(
+        "GitHub token cannot enable the documentation site. Add Pages: Read and write plus Administration: Read and write to the fine-grained token, then paste it in Settings and sync again.",
+      );
+    }
+    throw new Error(
+      `GitHub ${response.status}: ${body?.message ?? response.statusText}`,
+    );
   }
 
   async getFileText(path: string) {

@@ -26,6 +26,54 @@ afterEach(() => {
 });
 
 describe("GitHub client", () => {
+  it("enables GitHub Pages with the workflow build type", async () => {
+    const requests: Array<{ method: string; body?: string }> = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_input: string | URL | Request, init?: RequestInit) => {
+        const method = init?.method ?? "GET";
+        requests.push({ method, body: init?.body as string | undefined });
+        if (method === "GET") {
+          return response({ message: "Not Found" }, 404);
+        }
+        return response(
+          {
+            html_url: "https://octocat.github.io/knowledge/",
+            build_type: "workflow",
+          },
+          201,
+        );
+      }),
+    );
+
+    const site = await new GitHubClient(settings).ensurePagesWorkflow();
+
+    expect(site.build_type).toBe("workflow");
+    expect(requests).toEqual([
+      { method: "GET", body: undefined },
+      {
+        method: "POST",
+        body: JSON.stringify({ build_type: "workflow" }),
+      },
+    ]);
+  });
+
+  it("explains the Pages permission required for automatic enablement", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        response(
+          { message: "Resource not accessible by personal access token" },
+          403,
+        ),
+      ),
+    );
+
+    await expect(
+      new GitHubClient(settings).ensurePagesWorkflow(),
+    ).rejects.toThrow("Pages: Read and write");
+  });
+
   it("reuses an existing repository created by KnowlegeGraph", async () => {
     const createRequest = vi.fn();
     vi.stubGlobal(

@@ -71,15 +71,17 @@ On every synchronized knowledge or portal change, the workflow:
 4. uploads `portal/dist`;
 5. deploys the artifact through GitHub Pages.
 
-For the first deployment, open the generated repository's **Settings → Pages**
-and select **GitHub Actions** as the source if GitHub has not enabled it
-automatically. Private-repository Pages availability depends on the repository
+Before committing the generated workflow, KnowlegeGraph checks the repository's
+Pages configuration and creates or updates it to use GitHub Actions. This uses
+the fine-grained token directly because the workflow's built-in token cannot
+enable Pages. Private-repository Pages availability depends on the repository
 owner's GitHub plan.
 
-The fine-grained token must include **Workflows: read and write** in addition to
-the existing Contents permission because each sync maintains the Pages workflow
-under `.github/workflows/`. Tokens created before the portal feature must be
-edited or replaced before the first portal sync.
+The fine-grained token must include **Workflows: read and write** and
+**Pages: read and write** in addition to Contents and Administration. Workflows
+allows sync to maintain `.github/workflows/`; Pages allows the extension to
+enable the site. Tokens created before the portal feature must be edited or
+replaced before the first portal sync.
 
 ## Local development
 

@@ -17,6 +17,8 @@ describe("documentation portal template", () => {
       'cp -R "developer-notes" portal/public/knowledge',
     );
     expect(workflow).toContain('branches: ["release/docs"]');
+    expect(workflow).toContain("actions/checkout@v6");
+    expect(workflow).toContain("actions/setup-node@v6");
     expect(workflow).not.toContain("__KNOWLEDGE_DIRECTORY__");
   });
 

@@ -294,7 +294,9 @@ export async function syncPendingJobs(options?: {
       ...new Map(rawChanges.map((change) => [change.path, change])).values(),
     ];
 
-    const commit = await new GitHubClient(settings).commitChanges(
+    const client = new GitHubClient(settings);
+    await client.ensurePagesWorkflow();
+    const commit = await client.commitChanges(
       changes,
       `Sync ${jobs.length} KnowlegeGraph change${jobs.length === 1 ? "" : "s"}`,
     );

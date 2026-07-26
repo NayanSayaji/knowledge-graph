@@ -116,6 +116,7 @@ Import does not delete local nodes that are absent from the selected file.
    - **Administration: Read and write**
    - **Contents: Read and write**
    - **Workflows: Read and write**
+   - **Pages: Read and write**
 5. Generate the token and paste it into KnowlegeGraph.
 6. Keep or edit the default repository name `knowlege-base`.
 7. Keep **private repository** selected unless the notes should be public.
@@ -213,8 +214,9 @@ Rebuild the correct browser target and reload the extension from
 
 Recreate the fine-grained token with the correct resource owner, **All
 repositories**, Administration write, Contents write, and Workflows write.
-Tokens created before the documentation portal was added must be updated or
-replaced. Organization policies may require administrator approval.
+Also grant Pages write so the extension can enable GitHub Pages before its first
+deployment. Tokens created before the documentation portal was added must be
+updated or replaced. Organization policies may require administrator approval.
 
 ### GitHub says the repository or branch is unavailable
 
