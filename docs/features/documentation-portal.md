@@ -22,6 +22,17 @@ Markdown remains the human-readable topic source. `sections.json` and
 `stats.json` are derived on every sync and contain no independently editable
 content.
 
+The portal code is intentionally split into small, production-oriented modules:
+
+- `src/app/` owns the shell, route switching, and bootstrapping.
+- `src/features/` owns each page-level experience such as home, search, graph,
+  timeline, stats, section browsing, and topic reading.
+- `src/components/` contains shared presentational pieces like the topic list.
+- `src/lib/` contains reusable portal helpers such as formatting, section
+  indexing, and repository URL derivation.
+- `src/data/` holds preview fixtures used only when local generated content is
+  unavailable in development.
+
 ## Routes
 
 The portal uses hash routes so direct navigation works on GitHub Pages without

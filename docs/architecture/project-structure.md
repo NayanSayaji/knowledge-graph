@@ -10,8 +10,13 @@
 │   └── product/            # Vision, requirements, and roadmap
 ├── manifests/
 │   └── firefox.json         # Firefox-specific Manifest V3 metadata
-├── portal/
+ ├── portal/
 │   ├── src/                 # Generated documentation website
+│   │   ├── app/             # Portal shell, routing, and data bootstrapping
+│   │   ├── components/      # Shared presentation pieces used across pages
+│   │   ├── data/            # Preview fixtures and local fallback data
+│   │   ├── features/        # Route-level portal pages
+│   │   └── lib/             # Portal utilities and derived data helpers
 │   ├── deploy-pages.yml     # GitHub Pages workflow template
 │   └── vite.config.ts       # Standalone static portal build
 ├── public/
