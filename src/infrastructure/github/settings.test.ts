@@ -7,7 +7,7 @@ describe("GitHub settings", () => {
     const settings: GitHubSyncSettings = {
       enabled: true,
       owner: "octocat",
-      repository: "knowlege-base",
+      repository: "knowledge-base",
       branch: "main",
       directory: "knowledge",
       token: "github_pat_secret",

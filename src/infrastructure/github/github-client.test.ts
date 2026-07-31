@@ -102,11 +102,11 @@ describe("GitHub client", () => {
         if (url.endsWith("/user")) {
           return response({ login: "octocat" });
         }
-        if (url.endsWith("/repos/octocat/knowlege-base")) {
+        if (url.endsWith("/repos/octocat/knowledge-base")) {
           return response({
-            name: "knowlege-base",
-            full_name: "octocat/knowlege-base",
-            html_url: "https://github.com/octocat/knowlege-base",
+            name: "knowledge-base",
+            full_name: "octocat/knowledge-base",
+            html_url: "https://github.com/octocat/knowledge-base",
             private: true,
             default_branch: "main",
             description: GENERATED_REPOSITORY_DESCRIPTION,
@@ -118,15 +118,13 @@ describe("GitHub client", () => {
       }),
     );
 
-    const provision =
-      await new GitHubClient(settings).createAvailableRepository(
-        "knowlege-base",
-        true,
-      );
+    const provision = await new GitHubClient(
+      settings,
+    ).createAvailableRepository("knowledge-base", true);
 
     expect(provision).toMatchObject({
       created: false,
-      repository: { full_name: "octocat/knowlege-base" },
+      repository: { full_name: "octocat/knowledge-base" },
     });
     expect(createRequest).not.toHaveBeenCalled();
   });
@@ -140,22 +138,22 @@ describe("GitHub client", () => {
         if (url.endsWith("/user")) {
           return response({ login: "octocat" });
         }
-        if (url.endsWith("/repos/octocat/knowlege-base")) {
+        if (url.endsWith("/repos/octocat/knowledge-base")) {
           return response({ id: 1 });
         }
-        if (url.endsWith("/repos/octocat/knowlege-base_1")) {
+        if (url.endsWith("/repos/octocat/knowledge-base_1")) {
           return response({ id: 2 });
         }
-        if (url.endsWith("/repos/octocat/knowlege-base_2")) {
+        if (url.endsWith("/repos/octocat/knowledge-base_2")) {
           return response({ message: "Not Found" }, 404);
         }
         if (url.endsWith("/user/repos") && init?.method === "POST") {
           createdBodies.push(JSON.parse(init.body as string));
           return response(
             {
-              name: "knowlege-base_2",
-              full_name: "octocat/knowlege-base_2",
-              html_url: "https://github.com/octocat/knowlege-base_2",
+              name: "knowledge-base_2",
+              full_name: "octocat/knowledge-base_2",
+              html_url: "https://github.com/octocat/knowledge-base_2",
               private: true,
               default_branch: "main",
               owner: { login: "octocat" },
@@ -167,17 +165,15 @@ describe("GitHub client", () => {
       }),
     );
 
-    const provision =
-      await new GitHubClient(settings).createAvailableRepository(
-        "knowlege-base",
-        true,
-      );
+    const provision = await new GitHubClient(
+      settings,
+    ).createAvailableRepository("knowledge-base", true);
 
-    expect(provision.repository.name).toBe("knowlege-base_2");
+    expect(provision.repository.name).toBe("knowledge-base_2");
     expect(provision.created).toBe(true);
     expect(createdBodies).toEqual([
       expect.objectContaining({
-        name: "knowlege-base_2",
+        name: "knowledge-base_2",
         private: true,
         auto_init: true,
       }),
@@ -214,7 +210,10 @@ describe("GitHub client", () => {
           return response({ sha: "new-tree", tree: [] }, 201);
         }
         if (url.endsWith("/git/commits")) {
-          return response({ sha: "new-commit", tree: { sha: "new-tree" } }, 201);
+          return response(
+            { sha: "new-commit", tree: { sha: "new-tree" } },
+            201,
+          );
         }
         if (url.includes("/git/refs/heads/main")) {
           return response({ object: { sha: "new-commit" } });
@@ -285,10 +284,7 @@ describe("GitHub client", () => {
             201,
           );
         }
-        if (
-          url.includes("/git/refs/heads/main") &&
-          init?.method === "PATCH"
-        ) {
+        if (url.includes("/git/refs/heads/main") && init?.method === "PATCH") {
           return response(
             { message: "Resource not accessible by personal access token" },
             403,

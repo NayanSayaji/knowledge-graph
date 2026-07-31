@@ -10,7 +10,7 @@
 │   └── product/            # Vision, requirements, and roadmap
 ├── manifests/
 │   └── firefox.json         # Firefox-specific Manifest V3 metadata
- ├── portal/
+├── portal/
 │   ├── src/                 # Generated documentation website
 │   │   ├── app/             # Portal shell, routing, and data bootstrapping
 │   │   ├── components/      # Shared presentation pieces used across pages

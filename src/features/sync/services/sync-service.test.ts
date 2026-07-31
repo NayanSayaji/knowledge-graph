@@ -7,7 +7,7 @@ import { restoreRemoteGraph } from "./sync-service";
 const settings: GitHubSyncSettings = {
   enabled: true,
   owner: "octocat",
-  repository: "knowlege-base",
+  repository: "knowledge-base",
   branch: "main",
   directory: "knowledge",
   token: "test-token",

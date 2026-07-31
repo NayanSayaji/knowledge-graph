@@ -23,18 +23,23 @@ export async function saveNode(draft: NodeDraft, existing?: KnowledgeNode) {
         existing ??
         findMatchingNode(await database.nodes.toArray(), draft);
       const mergedDraft = matched ? mergeNodeDraft(matched, draft) : draft;
+      const preservePrimaryFields = Boolean(matched && !existing);
+      const matchedNode = matched;
       node = {
         ...mergedDraft,
-        id: matched?.id ?? crypto.randomUUID(),
-        slug: slugify(mergedDraft.title),
-        archived: matched?.archived ?? false,
-        favorite: matched?.favorite ?? false,
-        createdAt: matched?.createdAt ?? now,
+        title: preservePrimaryFields ? matchedNode!.title : mergedDraft.title,
+        summary: preservePrimaryFields ? matchedNode!.summary : mergedDraft.summary,
+        notes: preservePrimaryFields ? matchedNode!.notes : mergedDraft.notes,
+        id: matchedNode?.id ?? crypto.randomUUID(),
+        slug: preservePrimaryFields ? matchedNode!.slug : slugify(mergedDraft.title),
+        archived: matchedNode?.archived ?? false,
+        favorite: matchedNode?.favorite ?? false,
+        createdAt: matchedNode?.createdAt ?? now,
         updatedAt: now,
       };
       await database.nodes.put(node);
-      if (matched && matched.slug !== node.slug) {
-        await enqueueNodeDelete(`nodes/${matched.slug}.md`);
+      if (matchedNode && matchedNode.slug !== node.slug) {
+        await enqueueNodeDelete(`nodes/${matchedNode.slug}.md`);
       }
       await enqueueNodeUpsert(node.id);
     },

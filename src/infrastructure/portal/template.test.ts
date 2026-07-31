@@ -9,8 +9,9 @@ describe("documentation portal template", () => {
       change.path.includes("deploy-knowledge-portal"),
     )?.content;
 
-    expect(paths).toContain("portal/src/App.tsx");
-    expect(paths).toContain("portal/src/MarkdownDocument.tsx");
+    expect(paths).toContain("portal/src/app/PortalApp.tsx");
+    expect(paths).toContain("portal/src/features/topic/MarkdownDocument.tsx");
+    expect(paths).toContain("portal/src/lib/portal-data.ts");
     expect(paths).toContain("portal/package-lock.json");
     expect(workflow).toContain('"developer-notes/**"');
     expect(workflow).toContain(

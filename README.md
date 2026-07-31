@@ -118,12 +118,12 @@ Import does not delete local nodes that are absent from the selected file.
    - **Workflows: Read and write**
    - **Pages: Read and write**
 5. Generate the token and paste it into KnowlegeGraph.
-6. Keep or edit the default repository name `knowlege-base`.
+6. Keep or edit the default repository name `knowledge-base`.
 7. Select **Create repository & sync**.
 
-If `knowlege-base` already has KnowlegeGraph's generated-repository description,
+If `knowledge-base` already has KnowlegeGraph's generated-repository description,
 the extension reuses it. If the description is different, it tries
-`knowlege-base_1`, `knowlege-base_2`, and so on. New repositories are
+`knowledge-base_1`, `knowledge-base_2`, and so on. New repositories are
 initialized, connected, and populated during the same setup flow.
 
 Automatically created repositories are public so the generated site can be

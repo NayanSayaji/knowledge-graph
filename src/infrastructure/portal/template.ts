@@ -1,5 +1,17 @@
-import appSource from "../../../portal/src/App.tsx?raw";
-import markdownSource from "../../../portal/src/MarkdownDocument.tsx?raw";
+import appSource from "../../../portal/src/app/PortalApp.tsx?raw";
+import dataContextSource from "../../../portal/src/app/PortalDataContext.tsx?raw";
+import routerSource from "../../../portal/src/app/PortalRouter.tsx?raw";
+import topicListSource from "../../../portal/src/components/TopicList.tsx?raw";
+import previewNodesSource from "../../../portal/src/data/previewNodes.ts?raw";
+import homeSource from "../../../portal/src/features/home/HomePage.tsx?raw";
+import searchSource from "../../../portal/src/features/search/SearchPage.tsx?raw";
+import sectionSource from "../../../portal/src/features/section/SectionPage.tsx?raw";
+import graphSource from "../../../portal/src/features/graph/GraphPage.tsx?raw";
+import timelineSource from "../../../portal/src/features/timeline/TimelinePage.tsx?raw";
+import statsSource from "../../../portal/src/features/stats/StatsPage.tsx?raw";
+import markdownSource from "../../../portal/src/features/topic/MarkdownDocument.tsx?raw";
+import topicSource from "../../../portal/src/features/topic/TopicPage.tsx?raw";
+import portalDataSource from "../../../portal/src/lib/portal-data.ts?raw";
 import mainSource from "../../../portal/src/main.tsx?raw";
 import stylesSource from "../../../portal/src/styles.css?raw";
 import typesSource from "../../../portal/src/types.ts?raw";
@@ -37,8 +49,20 @@ export function getPortalTemplateChanges(
     { path: "portal/tsconfig.json", content: tsconfigSource },
     { path: "portal/vite.config.ts", content: viteConfigSource },
     { path: "portal/src/main.tsx", content: mainSource },
-    { path: "portal/src/App.tsx", content: appSource },
-    { path: "portal/src/MarkdownDocument.tsx", content: markdownSource },
+    { path: "portal/src/app/PortalApp.tsx", content: appSource },
+    { path: "portal/src/app/PortalDataContext.tsx", content: dataContextSource },
+    { path: "portal/src/app/PortalRouter.tsx", content: routerSource },
+    { path: "portal/src/components/TopicList.tsx", content: topicListSource },
+    { path: "portal/src/data/previewNodes.ts", content: previewNodesSource },
+    { path: "portal/src/features/home/HomePage.tsx", content: homeSource },
+    { path: "portal/src/features/search/SearchPage.tsx", content: searchSource },
+    { path: "portal/src/features/section/SectionPage.tsx", content: sectionSource },
+    { path: "portal/src/features/graph/GraphPage.tsx", content: graphSource },
+    { path: "portal/src/features/timeline/TimelinePage.tsx", content: timelineSource },
+    { path: "portal/src/features/stats/StatsPage.tsx", content: statsSource },
+    { path: "portal/src/features/topic/MarkdownDocument.tsx", content: markdownSource },
+    { path: "portal/src/features/topic/TopicPage.tsx", content: topicSource },
+    { path: "portal/src/lib/portal-data.ts", content: portalDataSource },
     { path: "portal/src/types.ts", content: typesSource },
     { path: "portal/src/styles.css", content: stylesSource },
     {

@@ -25,13 +25,36 @@ content.
 The portal code is intentionally split into small, production-oriented modules:
 
 - `src/app/` owns the shell, route switching, and bootstrapping.
-- `src/features/` owns each page-level experience such as home, search, graph,
-  timeline, stats, section browsing, and topic reading.
+- `src/features/` owns each page-level experience such as home, timeline,
+  stats, section browsing, and topic reading.
 - `src/components/` contains shared presentational pieces like the topic list.
 - `src/lib/` contains reusable portal helpers such as formatting, section
   indexing, and repository URL derivation.
 - `src/data/` holds preview fixtures used only when local generated content is
   unavailable in development.
+
+```mermaid
+flowchart TD
+  subgraph Sync["Extension sync"]
+    Source[IndexedDB nodes] --> Markdown[knowledge/nodes/*.md]
+    Source --> Graph[knowledge/graph.json]
+    Source --> Sections[knowledge/sections.json]
+    Source --> Stats[knowledge/stats.json]
+  end
+
+  subgraph Portal["Static portal"]
+    Markdown --> Router[Portal router shell]
+    Sections --> Router
+    Stats --> Router
+    Router --> Home[Topics]
+    Router --> Section[Section browser]
+    Router --> Topic[Topic reader]
+    Router --> Timeline[Timeline]
+    Router --> StatsPage[Stats]
+  end
+
+  Router --> Pages[GitHub Pages]
+```
 
 ## Routes
 
@@ -44,7 +67,6 @@ server-side rewrites:
 | `#/topic/:slug` | Markdown topic, resources, and related nodes |
 | `#/section/:name` | Alphabetical section browser with local search |
 | `#/search` | Instant Fuse.js search across all node fields |
-| `#/graph` | Zoomable relationship visualization with highlighting |
 | `#/timeline` | Learning activity grouped by creation month |
 | `#/stats` | Resource, tag, relationship, and connection analytics |
 

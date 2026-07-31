@@ -51,25 +51,33 @@ does.
 
 ```mermaid
 flowchart TD
-  Main[Popup entrypoint] --> App[Application shell]
-  App --> Capture[Capture feature]
-  App --> Library[Library feature]
-  App --> Settings[Settings feature]
-  Capture --> Browser[Current-page adapter]
-  Capture --> Repository[Node repository]
-  Library --> Search[Fuse.js search]
-  Library --> Repository
-  Settings --> Transfer[Graph import/export]
-  Settings --> Sync[GitHub sync]
-  Repository --> DB[(IndexedDB via Dexie)]
-  Transfer --> DB
-  Sync --> Queue[(Durable sync queue)]
+  subgraph Browser["Browser extension"]
+    Popup[Popup entrypoint] --> Router[React Router shell]
+    Router --> Capture[Capture route]
+    Router --> Library[Library route]
+    Router --> Settings[Settings route]
+    Background[Background service worker] --> Queue[(Sync queue)]
+    Background --> Storage[(chrome.storage.local)]
+  end
+
+  subgraph Local["Local persistence"]
+    Capture --> BrowserAPI[Current-page adapter]
+    Capture --> Repository[Node repository]
+    Library --> Search[Fuse.js search]
+    Library --> Repository
+    Settings --> Transfer[Graph import/export]
+    Settings --> Sync[GitHub sync]
+    Repository --> DB[(IndexedDB via Dexie)]
+    Transfer --> DB
+    Sync --> Queue
+  end
+
   Queue --> GitHub[GitHub Git Data API]
 ```
 
-The app shell owns only:
+The popup shell owns only:
 
-- current view (`capture`, `library`, or `settings`);
+- the current route;
 - the node currently being edited;
 - current page capture state;
 - the live, recently updated node collection.

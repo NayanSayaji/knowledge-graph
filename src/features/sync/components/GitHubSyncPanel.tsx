@@ -69,7 +69,7 @@ export function GitHubSyncPanel() {
   const [settings, setSettings] = useState<GitHubSyncSettings>(
     DEFAULT_GITHUB_SETTINGS,
   );
-  const [repositoryName, setRepositoryName] = useState("knowlege-base");
+  const [repositoryName, setRepositoryName] = useState("knowledge-base");
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
   const [configurationLocked, setConfigurationLocked] = useState(false);
@@ -312,7 +312,7 @@ export function GitHubSyncPanel() {
             value={repositoryName}
             disabled={configurationLocked || working}
             onChange={(event) => setRepositoryName(event.target.value)}
-            placeholder="knowlege-base"
+            placeholder="knowledge-base"
           />
         </label>
         <label>
@@ -363,7 +363,7 @@ export function GitHubSyncPanel() {
               value={settings.repository}
               disabled={configurationLocked || working}
               onChange={(event) => update("repository", event.target.value)}
-              placeholder="knowlege-base"
+              placeholder="knowledge-base"
             />
           </label>
           <label>

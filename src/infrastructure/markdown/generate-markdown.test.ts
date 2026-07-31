@@ -36,6 +36,7 @@ describe("GitHub artifact generation", () => {
   it("generates portable node Markdown", () => {
     const markdown = generateNodeMarkdown(node);
     expect(markdown).toContain("# CAP Theorem");
+    expect(markdown).toContain("## Links");
     expect(markdown).toContain("sections:\n  - \"HLD\"");
     expect(markdown).toContain("[Reference](https://example.com/cap)");
   });
@@ -67,8 +68,8 @@ describe("GitHub artifact generation", () => {
       "[CAP Theorem](knowledge/nodes/cap-theorem.md)",
     );
     expect(readme).toContain("![Knowledge nodes]");
-    expect(readme).toContain("<details open>");
-    expect(readme).toContain("<strong>HLD</strong> · 1 topic");
+    expect(readme).toContain("## HLD");
+    expect(readme).toContain("- [CAP Theorem](knowledge/nodes/cap-theorem.md)");
   });
 
   it("generates portal navigation and analytics", () => {
