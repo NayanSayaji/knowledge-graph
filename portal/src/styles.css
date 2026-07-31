@@ -269,34 +269,34 @@ h1 {
 .featured-wrap { padding-top: 20px; border-top: 1px solid var(--line-strong); }
 .featured-story {
   display: grid;
-  grid-template-columns: 160px minmax(0, 1fr) 180px;
-  gap: 34px;
+  grid-template-columns: 130px minmax(0, 1fr) 140px;
+  gap: 20px;
   align-items: start;
-  padding: 28px 0 50px;
+  padding: 18px 0 28px;
   border-bottom: 1px solid var(--line-strong);
 }
-.featured-meta { display: grid; gap: 6px; color: var(--subtle); font-size: 10px; }
+.featured-meta { display: grid; gap: 4px; color: var(--subtle); font-size: 10px; }
 .featured-meta span { color: var(--accent); font-weight: 650; }
 .featured-story h2 {
-  max-width: 650px;
-  margin: -4px 0 0;
-  font-size: clamp(24px, 3.2vw, 36px);
-  line-height: 1.06;
-  letter-spacing: -.03em;
+  max-width: 100%;
+  margin: -2px 0 0;
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.2;
+  letter-spacing: -.02em;
   text-wrap: balance;
 }
 .featured-story > p {
-  max-width: 30ch;
+  max-width: 40ch;
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.65;
+  font-size: 12px;
+  line-height: 1.55;
   text-wrap: pretty;
 }
 .read-link {
   grid-column: 3;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 650;
 }
 .featured-story:hover h2,
@@ -316,7 +316,7 @@ h1 {
   margin-bottom: 18px;
 }
 .collection-heading h2,
-.section-heading h2 { margin: 0; font-size: 28px; line-height: 1.08; letter-spacing: -.02em; }
+.section-heading h2 { margin: 0; font-size: 22px; line-height: 1.12; letter-spacing: -.015em; }
 .collection-heading > a,
 .section-heading > a { color: var(--accent); font-size: 10px; font-weight: 650; }
 .section-heading { margin-top: 72px; }

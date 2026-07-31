@@ -55,10 +55,10 @@ export function HomePage({ nodes, stats }: { nodes: KnowledgeNode[]; stats: Port
         <aside className="collection-sections">
           <p className="collection-label">Browse sections</p>
           {sections.map((section) => {
-            const count = nodes.filter((node) => node.sections.includes(section.name)).length;
+            const count = nodes.filter((node) => node.sections.includes(section)).length;
             return (
-              <a href={`#/section/${encodeURIComponent(section.name)}`} key={section.name}>
-                <span>{section.name}</span>
+              <a href={`#/section/${encodeURIComponent(section)}`} key={section}>
+                <span>{section}</span>
                 <small>{count}</small>
               </a>
             );
