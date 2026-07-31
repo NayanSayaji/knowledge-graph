@@ -4,9 +4,7 @@ import routerSource from "../../../portal/src/app/PortalRouter.tsx?raw";
 import topicListSource from "../../../portal/src/components/TopicList.tsx?raw";
 import previewNodesSource from "../../../portal/src/data/previewNodes.ts?raw";
 import homeSource from "../../../portal/src/features/home/HomePage.tsx?raw";
-import searchSource from "../../../portal/src/features/search/SearchPage.tsx?raw";
 import sectionSource from "../../../portal/src/features/section/SectionPage.tsx?raw";
-import graphSource from "../../../portal/src/features/graph/GraphPage.tsx?raw";
 import timelineSource from "../../../portal/src/features/timeline/TimelinePage.tsx?raw";
 import statsSource from "../../../portal/src/features/stats/StatsPage.tsx?raw";
 import markdownSource from "../../../portal/src/features/topic/MarkdownDocument.tsx?raw";
@@ -55,9 +53,7 @@ export function getPortalTemplateChanges(
     { path: "portal/src/components/TopicList.tsx", content: topicListSource },
     { path: "portal/src/data/previewNodes.ts", content: previewNodesSource },
     { path: "portal/src/features/home/HomePage.tsx", content: homeSource },
-    { path: "portal/src/features/search/SearchPage.tsx", content: searchSource },
     { path: "portal/src/features/section/SectionPage.tsx", content: sectionSource },
-    { path: "portal/src/features/graph/GraphPage.tsx", content: graphSource },
     { path: "portal/src/features/timeline/TimelinePage.tsx", content: timelineSource },
     { path: "portal/src/features/stats/StatsPage.tsx", content: statsSource },
     { path: "portal/src/features/topic/MarkdownDocument.tsx", content: markdownSource },
