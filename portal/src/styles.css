@@ -45,7 +45,7 @@ a { color: inherit; text-decoration: none; }
 }
 .masthead,
 .utility-bar {
-  width: min(1280px, calc(100% - 40px));
+  width: min(1440px, calc(100% - 32px));
   margin-inline: auto;
 }
 .masthead {
@@ -80,15 +80,16 @@ a { color: inherit; text-decoration: none; }
   align-self: stretch;
   display: flex;
   align-items: stretch;
-  gap: 27px;
+  gap: 32px;
 }
 .primary-nav a {
   position: relative;
   display: grid;
   place-items: center;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 550;
+  letter-spacing: .01em;
 }
 .primary-nav a::after {
   position: absolute;
@@ -119,7 +120,7 @@ a { color: inherit; text-decoration: none; }
 .github-link { color: var(--ink); font-size: 12px; font-weight: 650; }
 .github-link:hover { color: var(--accent); }
 .utility-bar {
-  min-height: 48px;
+  min-height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -199,7 +200,7 @@ kbd {
 
 main { min-width: 0; }
 .page {
-  width: min(1280px, calc(100% - 40px));
+  width: min(1440px, calc(100% - 32px));
   min-height: calc(100vh - 180px);
   margin-inline: auto;
   padding: 44px 0 68px;
@@ -298,10 +299,62 @@ h1 {
 .featured-story:hover .read-link { color: var(--accent); }
 .collection-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
-  gap: clamp(40px, 7vw, 80px);
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: clamp(48px, 8vw, 96px);
   padding-top: 44px;
 }
+
+.section-accordions {
+  padding-top: 56px;
+}
+
+.section-accordions > .section-heading {
+  margin-top: 0;
+}
+
+.section-accordion {
+  border-top: 1px solid var(--line-strong);
+}
+
+.section-accordion:last-child {
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.section-accordion summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+.section-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-accordion summary small {
+  color: var(--subtle);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.section-accordion[open] summary {
+  color: var(--accent);
+}
+
+.section-accordion .topic-list {
+  padding-bottom: 8px;
+}
+
+.section-accordion .topic-list > a:first-child {
+  border-top: 1px solid var(--line);
+}
+
 .collection-heading,
 .section-heading {
   display: flex;
@@ -406,8 +459,8 @@ h1 {
 
 .topic-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 240px;
-  gap: clamp(40px, 7vw, 80px);
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: clamp(48px, 8vw, 96px);
   align-items: start;
 }
 .topic-header { padding-bottom: 36px; border-bottom: 1px solid var(--line-strong); }
