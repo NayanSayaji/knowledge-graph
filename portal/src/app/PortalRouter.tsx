@@ -1,7 +1,7 @@
 import { createHashRouter, Link, NavLink, Outlet, useParams } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { useState } from "react";
-import { formatDate, repositoryUrl } from "../lib/portal-data";
+import { repositoryUrl } from "../lib/portal-data";
 import { usePortalData, PortalDataProvider } from "./PortalDataContext";
 import type { KnowledgeGraph, KnowledgeNode, PortalStats, SectionIndex } from "../types";
 import { TopicList } from "../components/TopicList";
@@ -77,8 +77,6 @@ function TopicHome() {
         .toLowerCase();
       return !query.trim() || haystack.includes(query.trim().toLowerCase());
     });
-  const featured = recent[0];
-
   return (
     <div className="home-page">
       <section className="home-intro">
@@ -109,46 +107,55 @@ function TopicHome() {
         </div>
       </section>
 
-      {featured && (
-        <section className="featured-wrap">
-          <p className="collection-label">Latest entry</p>
-          <a className="featured-story" href={featured.resources[0]?.url ?? `#/topic/${featured.slug}`}>
-            <div className="featured-meta">
-              <span>{featured.sections[0] ?? "Unsorted"}</span>
-              <time dateTime={featured.updatedAt}>{formatDate(featured.updatedAt)}</time>
-            </div>
-            <h2>{featured.title}</h2>
-            <p>{featured.summary || "Open this entry to read the complete note."}</p>
-            <span className="read-link">
-              Read entry <span aria-hidden="true">↗</span>
-            </span>
-          </a>
-        </section>
-      )}
-
-      <div className="collection-layout">
-        <section className="collection-feed">
-          <div className="collection-heading">
-            <div>
-              <p className="collection-label">The collection</p>
-              <h2>Recently updated</h2>
-            </div>
+      <section className="collection-feed">
+        <div className="collection-heading">
+          <div>
+            <p className="collection-label">The collection</p>
+            <h2>All topics</h2>
           </div>
-          <TopicList nodes={recent.slice(featured ? 1 : 0)} />
-        </section>
-        <aside className="collection-sections">
-          <p className="collection-label">Browse sections</p>
-          {sections.map((section) => {
-            const count = nodes.filter((node) => node.sections.includes(section.name)).length;
-            return (
-              <a href={`#/section/${encodeURIComponent(section.name)}`} key={section.name}>
+        </div>
+        <TopicList nodes={recent.filter((node) => {
+          const haystack = [
+            node.title,
+            node.summary,
+            node.notes,
+            node.sections.join(" "),
+            node.tags.join(" "),
+            node.keywords.join(" "),
+            node.resources.map((resource) => resource.url).join(" "),
+          ]
+            .join(" ")
+            .toLowerCase();
+          return !query.trim() || haystack.includes(query.trim().toLowerCase());
+        })} />
+      </section>
+
+      <section className="section-accordions">
+        <div className="section-heading">
+          <div>
+            <p className="collection-label">Sections</p>
+            <h2>Open a section to see its topics</h2>
+          </div>
+        </div>
+        {sections.map((section) => {
+          const grouped = nodes.filter((node) => node.sections.includes(section.name));
+          const filtered = grouped.filter((node) => {
+            const haystack = [node.title, node.summary, node.notes, node.tags.join(" "), node.keywords.join(" ")]
+              .join(" ")
+              .toLowerCase();
+            return !query.trim() || haystack.includes(query.trim().toLowerCase());
+          });
+          return (
+            <details className="section-accordion" key={section.name}>
+              <summary>
                 <span>{section.name}</span>
-                <small>{count}</small>
-              </a>
-            );
-          })}
-        </aside>
-      </div>
+                <small>{filtered.length}</small>
+              </summary>
+              <TopicList nodes={filtered} />
+            </details>
+          );
+        })}
+      </section>
     </div>
   );
 }
