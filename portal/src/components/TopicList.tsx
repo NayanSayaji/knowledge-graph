@@ -19,11 +19,6 @@ export function TopicList({ nodes }: { nodes: KnowledgeNode[] }) {
             <strong>{node.title}</strong>
             <p>{node.summary || "Notes are waiting to be expanded."}</p>
             <span className="topic-tags">{node.tags.slice(0, 3).join(" · ")}</span>
-            {node.resources[0] && (
-              <span className="topic-link">
-                {node.resources[0].title || node.resources[0].website}
-              </span>
-            )}
           </div>
           <span className="topic-arrow" aria-hidden="true">
             ↗

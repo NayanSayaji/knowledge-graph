@@ -72,6 +72,25 @@ describe("GitHub artifact generation", () => {
     expect(readme).toContain("- [CAP Theorem](knowledge/nodes/cap-theorem.md)");
   });
 
+  it("only lists the knowledge node link in section bullets", () => {
+    const readme = generateKnowledgeReadme([
+      {
+        ...node,
+        resources: [
+          {
+            title: "CAP Theorem",
+            url: "https://example.com/cap",
+            type: "article",
+            website: "example.com",
+          },
+        ],
+      },
+    ]);
+
+    expect(readme).toContain("- [CAP Theorem](knowledge/nodes/cap-theorem.md)");
+    expect(readme).not.toContain("https://example.com/cap");
+  });
+
   it("generates portal navigation and analytics", () => {
     const sections = JSON.parse(generateSectionsJson([node]));
     const stats = JSON.parse(generateStatsJson([node]));
